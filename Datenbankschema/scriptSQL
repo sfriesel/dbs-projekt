@@ -1,0 +1,9 @@
+CREATE TABLE customer (
+customer_ID integer PRIMARY KEY,
+surename text,
+forename text,
+street text,
+zip integer,
+city text,
+telephone text
+);
