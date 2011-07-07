@@ -23,12 +23,11 @@ public class LocationDataHandler extends AbstractDataHandler {
 		// prepare the statement
 		try {
 			pstmt = con.connection.prepareStatement("insert into locations"
-					+ "(movie_title, country, location)" + "VALUES (?,?,?);");
+					+ "(country, location)" + "VALUES (?,?);");
 		} catch (SQLException e) {
 			System.out.println("Error while creating a prepared statement.");
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
@@ -38,33 +37,36 @@ public class LocationDataHandler extends AbstractDataHandler {
 		if (arrayLine.length == 1) {
 			return;
 		}
+		
+		// only if the movie is released in 2010 or 2011, add it to the database
+		if (DataHandlerUtils.isInTimeRange(arrayLine[0])){
+			
+			System.out.println(arrayLine[0]);
+			// arrayLine[1] -> full location
+			// arrrayLine[1].last -> Country
 
-		// arrayLine[0] -> Title
-		// arrayLine[1] -> Location
-		// arrrayLine[1].last -> Country
-		// bei Locations gibt es bis zu 9 Werten
+			String country = null;
+			String location = null;
 
-		String country = null;
-		String location = null;
-
-		if (arrayLine[1].lastIndexOf(",") != -1) {
 			country = arrayLine[1].substring(arrayLine[1].lastIndexOf(",") + 1)
 					.trim();
-			location = arrayLine[1].substring(0, arrayLine[1].lastIndexOf(","));
-		} else {
-			country = arrayLine[1];
-		}
+			location = arrayLine[1];
 
-		try {
-			pstmt.setString(1, arrayLine[0]);
-			pstmt.setString(2, country);
-			pstmt.setString(3, location);
-			pstmt.execute();
-		} catch (SQLException e) {
-			System.out.println("Inserting new Location did not work.");
-			e.printStackTrace();
+			try {
+				pstmt.setString(1, country);
+				pstmt.setString(2, location);
+				pstmt.execute();
+				
+				// TODO: doppeltes einfügen von Werten verhindern? Wie?
+			} catch (SQLException e) {
+				System.out.println("Inserting new Location did not work.");
+				e.printStackTrace();
+			}
+		
+			// TODO: Also fill the table with movie and locations relation.
+			
+			// insert into shoootin: location_id and movie_title
+	
 		}
-
 	}
-
 }
