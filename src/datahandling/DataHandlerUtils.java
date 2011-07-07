@@ -17,15 +17,10 @@ public class DataHandlerUtils {
 	 *         other years.
 	 */
 	public static boolean isInTimeRange(String title) {
-		String year = title.substring(title.lastIndexOf("\"")+3,
-				title.lastIndexOf("\"") + 7);
 
-		//TDOD: Bug " kommt nicht immer vor, am besten nur nach 2011 oder 2010 im titel suchen ?
-		//TODO: What to do with "????" ?
-		if (year.equals("2010") || year.equals("2011"))
+		if (title.contains("2010") || title.contains("2011")) {
 			return true;
-		else
+		} else
 			return false;
-
 	}
 }

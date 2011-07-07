@@ -1,9 +1,24 @@
-CREATE TABLE customer (
+CREATE TABLE customers (
 customer_ID integer PRIMARY KEY,
-surename text,
-forename text,
-street text,
+surename varchar(20),
+forename varchar(15),
+street varchar(30),
+number integer,
 zip integer,
-city text,
-telephone text
+city varchar(20),
+telephone varchar(15)
+);
+
+CREATE TABLE locations (
+location_id serial,
+country varchar(50),
+location text PRIMARY KEY
+);
+
+CREATE TABLE SHOOTIN (
+location_id serial,
+movie_title text,
+FOREIGN KEY (location_id) REFERENCES locations.location_id,
+FOREIGN KEY (movie_title) REFERENCES movies.movie_title,
+PRIMARY KEY (location_id, movie_title)
 );
