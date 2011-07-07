@@ -9,16 +9,16 @@ CREATE TABLE Customer (
 	telephone varchar(15)
 );
 
-CREATE TABLE Transaction {
+CREATE TABLE Transaction (
 	id serial PRIMARY KEY
-};
+(;
 
-CREATE TABLE PriceModel {
+CREATE TABLE PriceModel (
 	name varchar(15) PRIMARY KEY,
 	timeUnit char(1)
-};
+(;
 
-CREATE TABLE Rental {
+CREATE TABLE Rental (
 	transaction integer,
 	priceModel varchar(15),
 	movie varchar(50),
@@ -27,44 +27,44 @@ CREATE TABLE Rental {
 	CONSTRAINT fk_transaction FOREIGN KEY (transaction) REFERENCES Transaction(id),
 	CONSTRAINT fk_pricemodel FOREIGN KEY (priceModel) REFERENCES PriceModel(name),
 	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES movie(title)
-};
+(;
 
 CREATE TABLE Location (
 	country varchar(50),
 	location text PRIMARY KEY
 );
 
-CREATE TABLE Director {
+CREATE TABLE Director (
 	forename varchar(20),
 	lastname varchar(20),
 	CONSTRAINT pk PRIMARY KEY (forename, lastname)
-};
+(;
 
-CREATE TABLE Actor {
+CREATE TABLE Actor (
 	forename varchar(20),
 	lastname varchar(20),
 	CONSTRAINT pk PRIMARY KEY (forename, lastname)
-};
+(;
 
-CREATE TABLE Starring {
+CREATE TABLE Starring (
 	movie varchar(50),
 	actor varchar(50),
 	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES Movie(title),
 	CONSTRAINT fk_actor FOREIGN KEY (actor) REFERENCES Actor(name)
-};
+);
 
-CREATE TABLE ShotIn {
+CREATE TABLE ShotIn )
 	movie varchar(50),
 	location text,
 	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES Movie(title),
 	CONSTRAINT fk_location FOREIGN KEY (location) REFERENCES Location(location)
-};
+);
 
-CREATE TABLE Movie {
-	title varchar(50),
+CREATE TABLE Movie )
+	title varchar(220) PRIMARY KEY,
 	description text,
 	category char(1),
 	release date,
 	CONSTRAINT cat_constraint CHECK (category IN ('A', 'B'))
-};
+);
 
