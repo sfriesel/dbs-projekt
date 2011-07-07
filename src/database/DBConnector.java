@@ -80,6 +80,7 @@ public class DBConnector {
 	private void openConnection() {
 		try {
 			connection = DriverManager.getConnection(getUrl(), user, password);
+			connection.setAutoCommit(false);
 		} catch (SQLException e) {
 			System.out.println("Error while opening a connnection.");
 			e.printStackTrace();

@@ -6,11 +6,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
+
+import database.DBConnector;
 
 public abstract class AbstractDataHandler {
 
 	BufferedReader reader = null;
 	String pattern;
+	
+	private int commitCounter = 0;
+	private int transaction = 5000;
 	
 	public AbstractDataHandler(String filename, int lineNumber, String pattern){
 		open(filename);
@@ -64,14 +70,27 @@ public abstract class AbstractDataHandler {
 
 		String stringLine = null;
 		String[] arrayLine = null;
+		
+		DBConnector con = DBConnector.getInstance();
 
 		try {
 			while ((stringLine = reader.readLine()) != null) {
 				arrayLine = stringLine.split(pattern);
 				insertDB(arrayLine);
+				
+				commitCounter++;
+				if (commitCounter == transaction){
+					
+					con.connection.commit();
+					commitCounter = 0;
+				}
 			}
+			con.connection.commit();
 		} catch (IOException e) {
 			System.out.println("Error while parsing the file.");
+			e.printStackTrace();
+		} catch (SQLException e) {
+			System.out.println("Error while committing.");
 			e.printStackTrace();
 		}
 	}

@@ -41,7 +41,6 @@ public class LocationDataHandler extends AbstractDataHandler {
 		// only if the movie is released in 2010 or 2011, add it to the database
 		if (DataHandlerUtils.isInTimeRange(arrayLine[0])){
 			
-			System.out.println(arrayLine[0]);
 			// arrayLine[1] -> full location
 			// arrrayLine[1].last -> Country
 
@@ -64,9 +63,7 @@ public class LocationDataHandler extends AbstractDataHandler {
 			}
 		
 			// TODO: Also fill the table with movie and locations relation.
-			
-			// insert into shoootin: location_id and movie_title
-	
+			// insert into shotin: location_id and movie_title
 		}
 	}
 }

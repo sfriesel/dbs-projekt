@@ -23,7 +23,7 @@ public class CustomerDataHandler extends AbstractDataHandler {
 		// prepare the statement
 		try {
 			pstmt = con.connection
-					.prepareStatement("insert into customers"
+					.prepareStatement("insert into customer"
 							+ "(customer_id, surename, forename, street, number, zip, city, telephone)"
 							+ "VALUES (?,?,?,?,?,?,?,?);");
 		} catch (SQLException e) {

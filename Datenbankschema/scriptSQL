@@ -53,14 +53,14 @@ CREATE TABLE Starring (
 	CONSTRAINT fk_actor FOREIGN KEY (actor) REFERENCES Actor(name)
 );
 
-CREATE TABLE ShotIn )
+CREATE TABLE ShotIn (
 	movie varchar(50),
 	location text,
 	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES Movie(title),
 	CONSTRAINT fk_location FOREIGN KEY (location) REFERENCES Location(location)
 );
 
-CREATE TABLE Movie )
+CREATE TABLE Movie (
 	title varchar(220) PRIMARY KEY,
 	description text,
 	category char(1),
