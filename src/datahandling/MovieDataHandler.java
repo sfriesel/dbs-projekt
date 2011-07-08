@@ -12,8 +12,6 @@ public class MovieDataHandler extends AbstractDataHandler {
 	static final private String pattern = "\t+";
 
 	private PreparedStatement pstmt = null;
-	
-	int wr = 0;
 
 	public MovieDataHandler() {
 		super(filename, lineNumber, pattern);
@@ -40,7 +38,7 @@ public class MovieDataHandler extends AbstractDataHandler {
 
 		// only parse lines, which are in the correct form
 		// and have the year 2010 or 2011, ???? are ignored
-		if (arrayLine.length == 3 && (arrayLine[1].contains("2010") || arrayLine[1].contains("2011"))) {
+		if (arrayLine.length == 3 && DataHandlerUtils.isInTimeRange(arrayLine[1])) {
 
 			try {
 				pstmt.setString(1, arrayLine[0]);
