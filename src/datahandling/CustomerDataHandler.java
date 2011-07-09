@@ -11,48 +11,48 @@ public class CustomerDataHandler extends AbstractDataHandler {
 	static final private int lineNumber = 1;
 	static final private String pattern = ",";
 
-	private PreparedStatement pstmt = null;
+	private PreparedStatement insertStmt; final DBConnector con;
 
 	public CustomerDataHandler() {
 
 		super(filename, lineNumber, pattern);
 
 		// get database connection
-		DBConnector con = DBConnector.getInstance();
-
-		// prepare the statement
-		try {
-			pstmt = con.connection
-					.prepareStatement("insert into customer"
-							+ "(customer_id, surename, forename, street, number, zip, city, telephone)"
-							+ "VALUES (?,?,?,?,?,?,?,?);");
-		} catch (SQLException e) {
-			System.out.println("Error while creating a prepared statement.");
-			e.printStackTrace();
-		}
+		this.con = DBConnector.getInstance();
 	}
 
 	@Override
-	protected void insertDB(String[] arrayLine) {
+	protected void insertDB(String[] arrayLine) throws SQLException {
 
-		try {
-			pstmt.setInt(1, Integer.parseInt(arrayLine[0]));
-			pstmt.setString(2, arrayLine[1]);
-			pstmt.setString(3, arrayLine[2]);
-			
-			// split the street and the  number
-			int number = Integer.parseInt(arrayLine[3].substring(arrayLine[3].lastIndexOf(" ")).trim());
-			String street = arrayLine[3].substring(0, arrayLine[3].lastIndexOf(" "));
-			
-			pstmt.setString(4, street);
-			pstmt.setInt(5, number);
-			pstmt.setInt(6, Integer.parseInt(arrayLine[4]));
-			pstmt.setString(7, arrayLine[5]);
-			pstmt.setString(8, arrayLine[6]);
-			pstmt.execute();
-		} catch (SQLException e) {
-			System.out.println("Inserting new Customers did not work.");
-			e.printStackTrace();
-		}
+		insertStmt.setInt(1, Integer.parseInt(arrayLine[0]));
+		insertStmt.setString(2, arrayLine[1]);
+		insertStmt.setString(3, arrayLine[2]);
+
+		// split the street and the number
+		int number = Integer.parseInt(arrayLine[3].substring(
+				arrayLine[3].lastIndexOf(" ")).trim());
+		String street = arrayLine[3]
+				.substring(0, arrayLine[3].lastIndexOf(" "));
+
+		insertStmt.setString(4, street);
+		insertStmt.setInt(5, number);
+		insertStmt.setInt(6, Integer.parseInt(arrayLine[4]));
+		insertStmt.setString(7, arrayLine[5]);
+		insertStmt.setString(8, arrayLine[6]);
+		insertStmt.execute();
+	}
+
+	@Override
+	protected void closeStatements() throws SQLException {
+		insertStmt.close();
+	}
+
+	@Override
+	protected void prepareStatements() throws SQLException {
+
+		insertStmt = con.connection
+				.prepareStatement("insert into customer"
+						+ "(customer_id, surename, forename, street, number, zip, city, telephone)"
+						+ "VALUES (?,?,?,?,?,?,?,?);");
 	}
 }

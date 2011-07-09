@@ -1,6 +1,5 @@
 package testing;
 
-import database.DBConnector;
 import datahandling.AbstractDataHandler;
 import datahandling.CustomerDataHandler;
 import datahandling.LocationDataHandler;
@@ -10,8 +9,17 @@ import datahandling.ReleaseDataHandler;
 public class TestDataHandlers {
 	public static void main(String[] args) {
 
-		AbstractDataHandler handler = new ReleaseDataHandler();
-		handler.parse();
+//		AbstractDataHandler handler1 = new CustomerDataHandler();
+//		handler1.parse();
+//		
+//		AbstractDataHandler handler2 = new MovieDataHandler();
+//		handler2.parse();
+		
+		AbstractDataHandler handler3 = new ReleaseDataHandler();
+		handler3.parse();
+		
+//		AbstractDataHandler handler4 = new LocationDataHandler();
+//		handler4.parse();
 	}
 
 }

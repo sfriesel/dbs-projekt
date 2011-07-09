@@ -1,6 +1,7 @@
 package datahandling;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.DBConnector;
@@ -11,57 +12,82 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 	static final private int lineNumber = 14;
 	static final private String pattern = "\t+";
 
-	private PreparedStatement pstmt = null;
+	private PreparedStatement insertStmt;
+	private PreparedStatement selectMovStmt;
+
+	private final DBConnector con;
+
+	private String currentMovie = null;
+	private String releaseDate = null;
+	private boolean isUSA = false;
 
 	public ReleaseDataHandler() {
 		super(filename, lineNumber, pattern);
 
 		// get database connection
-		DBConnector con = DBConnector.getInstance();
-
-		// prepare the statement
-		try {
-			pstmt = con.connection
-					.prepareStatement("UPDATE Movie SET release = ?, release_reg = ? WHERE title = ?;");
-		} catch (SQLException e) {
-			System.out.println("Error while creating a prepared statement.");
-			e.printStackTrace();
-		}
-		// "UPDATE movies SET release_Date = ?, region = ? WHERE title = ?"
+		con = DBConnector.getInstance();
 	}
 
 	@Override
-	protected void insertDB(String[] arrayLine) {
+	protected void insertDB(String[] arrayLine) throws SQLException {
 
 		// arrayLine[0] -> title
-		// arrayLine[1] -> release
+		// arrayLine[1] -> release+country
 		// arrayLine[2] -> further infos
+
+		String movieTitle = arrayLine[0];
+		String releaseString = arrayLine[1];
 
 		// skip useless lines, last line
 		if (arrayLine.length == 1)
 			return;
 
+		// get the movie from the DB
+		selectMovStmt.setString(1, movieTitle);
+		ResultSet movRS = selectMovStmt.executeQuery();
+
 		// is the movie already in the DB ?
-		if (DataHandlerUtils.isAlreadyInserted(arrayLine[0], "movie", "title")) {
+		if (movRS.next()) {
 
-			// release date in the USA
-			if (arrayLine[1].contains("USA")) {
+			String country = releaseString.split(":")[1];
 
-				String date = DataHandlerUtils.extractDate(arrayLine[1]);
+			// is it still the same movie ?
+			if (currentMovie == movieTitle) {
 
-				// add to DB
-				try {
-					// TODO: setDate verwenden
-					pstmt.setString(1, date);
-					// TODO: deal with the release country USA and noUSA
-					pstmt.setString(2, "USA");
-					pstmt.setString(3, arrayLine[0]);
-				} catch (SQLException e) {
-					System.out
-							.println("Inserting the reasese date did not work.");
-					e.printStackTrace();
+				// is USA not found yet ?
+				if (!isUSA && (country.equals("USA"))) {
+					isUSA = true;
+					releaseDate = DataHandlerUtils.extractDate(releaseString);
 				}
+
+			} else {
+				// movie title has changed
+				currentMovie = movieTitle;
+
+				// is the first date from the USA?
+				if (country.equals("USA")) {
+					isUSA = true;
+				}
+
+				// save the release date
+				releaseDate = DataHandlerUtils.extractDate(releaseString);
 			}
 		}
+	}
+
+	@Override
+	protected void closeStatements() throws SQLException {
+		insertStmt.close();
+		selectMovStmt.close();
+	}
+
+	@Override
+	protected void prepareStatements() throws SQLException {
+
+		insertStmt = con.connection
+				.prepareStatement("UPDATE Movie SET release = ?, rel_country = ? WHERE title = ?;");
+
+		selectMovStmt = con.connection
+				.prepareStatement("SELECT * FROM Movie WHERE title = ?;");
 	}
 }

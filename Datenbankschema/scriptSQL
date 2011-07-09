@@ -65,7 +65,7 @@ CREATE TABLE Movie (
 	description text,
 	category char(1),
 	release date,
-	release_reg varchar(50),
+	rel_country varchar(50),
 	CONSTRAINT cat_constraint CHECK (category IN ('A', 'B'))
 );
 

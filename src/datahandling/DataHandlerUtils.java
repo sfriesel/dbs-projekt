@@ -41,9 +41,11 @@ public class DataHandlerUtils {
 	}
 
 	/**
+	 * Takes the release-String (e.g. USA:22 January 2006) and returns the Date
+	 * in a proper Date-Formet the DB can work with.
 	 * 
 	 * @param releaseString
-	 * @return
+	 * @return only the date
 	 */
 	public static String extractDate(String releaseString) {
 		// TODO: make a real date format for inserting into the db
