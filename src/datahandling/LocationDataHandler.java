@@ -11,36 +11,29 @@ public class LocationDataHandler extends AbstractDataHandler {
 	static final private int lineNumber = 264;
 	static final private String pattern = "\t+";
 
-	private PreparedStatement pstmt = null;
+	private PreparedStatement insertLocToLocationStmt = null;
+
+	DBConnector con;
 
 	public LocationDataHandler() {
 
 		super(filename, lineNumber, pattern);
 
 		// get database connection
-		DBConnector con = DBConnector.getInstance();
-
-		// prepare the statement
-		try {
-			pstmt = con.connection.prepareStatement("insert into locations"
-					+ "(country, location)" + "VALUES (?,?);");
-		} catch (SQLException e) {
-			System.out.println("Error while creating a prepared statement.");
-			e.printStackTrace();
-		}
+		con = DBConnector.getInstance();
 	}
 
 	@Override
-	protected void insertDB(String[] arrayLine) {
+	protected void insertDB(String[] arrayLine) throws SQLException {
 
 		// ignore empty lines in the end
 		if (arrayLine.length == 1) {
 			return;
 		}
-		
+
 		// only if the movie is released in 2010 or 2011, add it to the database
-		if (DataHandlerUtils.isInTimeRange(arrayLine[0])){
-			
+		if (DataHandlerUtils.isInTimeRange(arrayLine[0])) {
+
 			// arrayLine[1] -> full location
 			// arrrayLine[1].last -> Country
 
@@ -51,19 +44,27 @@ public class LocationDataHandler extends AbstractDataHandler {
 					.trim();
 			location = arrayLine[1];
 
-			try {
-				pstmt.setString(1, country);
-				pstmt.setString(2, location);
-				pstmt.execute();
-				
-				// TODO: doppeltes einfügen von Werten verhindern? Wie?
-			} catch (SQLException e) {
-				System.out.println("Inserting new Location did not work.");
-				e.printStackTrace();
-			}
-		
+			insertLocToLocationStmt.setString(1, country);
+			insertLocToLocationStmt.setString(2, location);
+			insertLocToLocationStmt.execute();
+
+			// TODO: doppeltes einfügen von Werten verhindern? Wie?
+
 			// TODO: Also fill the table with movie and locations relation.
 			// insert into shotin: location_id and movie_title
 		}
+	}
+
+	@Override
+	protected void closeStatements() throws SQLException {
+		insertLocToLocationStmt.close();
+
+	}
+
+	@Override
+	protected void prepareStatements() throws SQLException {
+		insertLocToLocationStmt = con.connection
+				.prepareStatement("insert into locations"
+						+ "(country, location)" + "VALUES (?,?);");
 	}
 }

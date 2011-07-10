@@ -30,7 +30,6 @@ public class DBConnector {
 	public static DBConnector getInstance() {
 		if (instance == null) {
 			instance = new DBConnector();
-			
 			instance.loadJdbcDriver();
 			instance.openConnection();
 		}

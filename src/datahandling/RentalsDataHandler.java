@@ -1,5 +1,7 @@
 package datahandling;
 
+import java.sql.SQLException;
+
 import database.DBConnector;
 
 public class RentalsDataHandler extends AbstractDataHandler {
@@ -21,6 +23,22 @@ public class RentalsDataHandler extends AbstractDataHandler {
 	protected void insertDB(String[] arrayLine) {
 		// TODO Auto-generated method stub
 
+	}
+
+
+
+	@Override
+	protected void closeStatements() throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+
+	@Override
+	protected void prepareStatements() throws SQLException {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -13,13 +13,13 @@ import database.DBConnector;
 public abstract class AbstractDataHandler {
 
 	private BufferedReader reader = null;
-	
+
 	private String pattern;
 	private String filename;
 	private int lineNumber;
 
 	private int commitCounter = 0;
-	private int transaction = 5000;
+	private static final int transaction = 5000;
 
 	public AbstractDataHandler(String filename, int lineNumber, String pattern) {
 		this.filename = filename;
@@ -77,7 +77,11 @@ public abstract class AbstractDataHandler {
 				commitCounter = 0;
 			}
 		}
-		con.connection.commit();
+
+		if (commitCounter > 0) {
+			con.connection.commit();
+		}
+		
 		closeStatements();
 	}
 
