@@ -45,8 +45,7 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 
 		// if something else is wrong
 		if (!DataHandlerUtils.isValidReleaseString(arrayLine[1])
-				|| !DataHandlerUtils.isInTimeRange(date.toString())
-				|| date == null) {
+				|| !DataHandlerUtils.isInTimeRange(date.toString())) {
 			return;
 		}
 

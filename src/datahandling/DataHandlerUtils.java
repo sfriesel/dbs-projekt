@@ -35,22 +35,21 @@ public class DataHandlerUtils {
 	 * 
 	 * @param releaseString
 	 *            the string to extract the date from
-	 * @return null if it was not possible to parse the date, otherwithe the
-	 *         date as an sql date.
+	 * @return the date as an sql date.
 	 */
 	public static Date extractDate(String releaseString) {
 
 		String dateString = releaseString.split(":")[1].replaceAll("\\s+", " ");
 		int dateLength = dateString.split(" ").length;
 
-		String pattern = "d MMMM yyyy";
+		String pattern = "d MMM yyyy";
 		Locale locale = new Locale("en");
 		SimpleDateFormat format = null;
 		java.util.Date date = null;
 
 		// month year
 		if (dateLength == 2) {
-			pattern = "MMMM yyyy";
+			pattern = "MMM yyyy";
 		}
 
 		// year
@@ -69,11 +68,8 @@ public class DataHandlerUtils {
 		// change it to s sql date
 		java.sql.Date dt = null;
 
-		if (date != null) {
-
-			long t = date.getTime();
-			dt = new java.sql.Date(t);
-		}
+		long t = date.getTime();
+		dt = new java.sql.Date(t);
 
 		return dt;
 	}
