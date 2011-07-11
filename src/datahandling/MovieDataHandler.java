@@ -11,43 +11,44 @@ public class MovieDataHandler extends AbstractDataHandler {
 	static final private int lineNumber = 4;
 	static final private String pattern = "\t+";
 
-	private PreparedStatement pstmt = null;
+	private PreparedStatement insertStmt = null;
+
+	private final DBConnector con;
 
 	public MovieDataHandler() {
 		super(filename, lineNumber, pattern);
 
 		// get database connection
-		DBConnector con = DBConnector.getInstance();
+		con = DBConnector.getInstance();
+	}
 
-		// prepare the statement
-		try {
-			pstmt = con.connection.prepareStatement("insert into movie"
-					+ "(title, category)" + "VALUES (?,?);");
-		} catch (SQLException e) {
-			System.out.println("Error while creating a prepared statement.");
-			e.printStackTrace();
+	@Override
+	protected void insertDB(String[] arrayLine) throws SQLException {
+
+		// arrayLine[0] -> title
+		// arrayLine[1] -> year(s)
+		// arrayLine[2] -> category
+
+		// only parse lines, which are in the correct form
+		// and have the year 2010 or 2011, ???? are ignored
+		if (arrayLine.length == 3
+				&& DataHandlerUtils.isInTimeRange(arrayLine[1])) {
+
+			insertStmt.setString(1, arrayLine[0]);
+			insertStmt.setString(2, arrayLine[2]);
+			insertStmt.execute();
 		}
 	}
 
 	@Override
-	protected void insertDB(String[] arrayLine) {
-		
-		// arrayLine[0]	-> title
-		// arrayLine[1]	-> year(s)
-		// arrayLine[2]	-> category
+	protected void closeStatements() throws SQLException {
+		insertStmt.close();
 
-		// only parse lines, which are in the correct form
-		// and have the year 2010 or 2011, ???? are ignored
-		if (arrayLine.length == 3 && DataHandlerUtils.isInTimeRange(arrayLine[1])) {
+	}
 
-			try {
-				pstmt.setString(1, arrayLine[0]);
-				pstmt.setString(2, arrayLine[2]);
-				pstmt.execute();
-			} catch (SQLException e) {
-				System.out.println("Inserting new Movie did not work.");
-				e.printStackTrace();
-			}
-		}
+	@Override
+	protected void prepareStatements() throws SQLException {
+		insertStmt = con.connection.prepareStatement("insert into movie"
+				+ "(title, category)" + "VALUES (?,?);");
 	}
 }

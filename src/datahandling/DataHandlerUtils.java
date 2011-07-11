@@ -1,5 +1,10 @@
 package datahandling;
 
+import java.text.SimpleDateFormat;
+import java.sql.Date;
+import java.text.ParseException;
+import java.util.Locale;
+
 /***
  * Here are some userfull methods, some DataHandlers need to use.
  * 
@@ -25,28 +30,73 @@ public class DataHandlerUtils {
 	}
 
 	/**
-	 * Checks weather a given pattern is already inside a certain table and
-	 * column. E.g. is a given movie title already in the DB?
+	 * Takes the release-String (e.g. USA:22 January 2006) and returns the Date
+	 * in a proper Date-Formet the DB can work with.
 	 * 
-	 * @param pattern
-	 * @param table
-	 * @param column
-	 * @return
+	 * @param releaseString
+	 *            the string to extract the date from
+	 * @return the date as an sql date.
 	 */
-	public static boolean isAlreadyInserted(String pattern, String table,
-			String column) {
+	public static Date extractDate(String releaseString) {
 
-		// TODO: implement
-		return true;
+		String dateString = releaseString.split(":")[1].replaceAll("\\s+", " ");
+		int dateLength = dateString.split(" ").length;
+
+		String pattern = "d MMM yyyy";
+		Locale locale = new Locale("en");
+		SimpleDateFormat format = null;
+		java.util.Date date = null;
+
+		// month year
+		if (dateLength == 2) {
+			pattern = "MMM yyyy";
+		}
+
+		// year
+		if (dateLength == 1) {
+			pattern = "yyyy";
+		}
+
+		format = new SimpleDateFormat(pattern, locale);
+
+		try {
+			date = format.parse(dateString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		// change it to s sql date
+		java.sql.Date dt = null;
+
+		long t = date.getTime();
+		dt = new java.sql.Date(t);
+
+		return dt;
 	}
 
 	/**
+	 * Extracts the country from a proper release string.
 	 * 
 	 * @param releaseString
-	 * @return
+	 * @return the country the movie was released
 	 */
-	public static String extractDate(String releaseString) {
-		// TODO: make a real date format for inserting into the db
-		return releaseString.split(":")[1];
+	public static String extractCountry(String releaseString) {
+		return releaseString.split(":")[0];
+	}
+
+	/**
+	 * Only Strings are allowed, who contain a ":", so we can be sure to get a
+	 * country and a release date.
+	 * 
+	 * @param releaseString
+	 *            the String to be checked
+	 * @return true if contains a ":" and false if not
+	 */
+	public static boolean isValidReleaseString(String releaseString) {
+		if (releaseString.split(":").length == 2) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
