@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.*;
+import java.io.File;
 
 /**
  * DBConnecter holds exactly one database connection. Its follows the Singleton
@@ -11,8 +12,9 @@ import java.sql.*;
  */
 public class DBConnector {
 	private static DBConnector instance = null;
-	private String driver = "org.postgresql.Driver";
-	private String baseURL = "jdbc:postgresql:"
+	private static String driver = "org.postgresql.Driver";
+	private static String baseURL = "jdbc:postgresql:";
+	private static String schemaPath = "../../Datenbankschema/scriptSQL";
 
 	public Connection connection = null;
 
@@ -67,6 +69,59 @@ public class DBConnector {
 			e.printStackTrace();
 			System.exit(1);
 		}
+	}
+
+	/**
+	 * Execute the sql statements given in inputFile
+	 * based on http://stackoverflow.com/questions/1497569/how-to-execute-sql-script-file-using-jdbc
+	 */
+	private void executeSqlScript(String path) {
+		File inputFile = new File(path);
+		String delimiter = ";";
+
+		// Create scanner
+		Scanner scanner;
+		try {
+			scanner = new Scanner(inputFile).useDelimiter(delimiter);
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+			return;
+		}
+
+		// Loop through the SQL file statements
+		Statement currentStatement = null;
+		while(scanner.hasNext()) {
+
+			// Get statement
+			String rawStatement = scanner.next() + delimiter;
+			try {
+				// Execute statement
+				currentStatement = connection.createStatement();
+				currentStatement.execute(rawStatement);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				// Release resources
+				if (currentStatement != null) {
+					try {
+						currentStatement.close();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				currentStatement = null;
+			}
+		}
+	}
+
+	/**
+	 * Drops all tables from the database and re-inserts all data through the
+	 * data handlers.
+	 */
+	public void resetDB() {
+		executeSqlScript(DBConnector.schemaPath);
+
+		//TODO: run all data handlers here (or wrapper method)
 	}
 
 	/**
