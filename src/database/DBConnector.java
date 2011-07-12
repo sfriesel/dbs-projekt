@@ -85,7 +85,7 @@ public class DBConnector {
 		Scanner scanner;
 		try {
 			scanner = new Scanner(inputFile).useDelimiter(delimiter);
-		} catch (FileNotFoundException e1) {
+		} catch(FileNotFoundException e1) {
 			e1.printStackTrace();
 			return;
 		}
@@ -100,15 +100,15 @@ public class DBConnector {
 				// Execute statement
 				currentStatement = connection.createStatement();
 				currentStatement.execute(rawStatement);
-			} catch (SQLException e) {
+			} catch(SQLException e) {
 				System.err.println("Failed to execute sql statement: " + rawStatement);
 				e.printStackTrace();
 			} finally {
 				// Release resources
-				if (currentStatement != null) {
+				if(currentStatement != null) {
 					try {
 						currentStatement.close();
-					} catch (SQLException e) {
+					} catch(SQLException e) {
 						e.printStackTrace();
 					}
 				}
