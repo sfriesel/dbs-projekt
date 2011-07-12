@@ -3,6 +3,7 @@ package database;
 import java.sql.*;
 import java.io.*;
 import java.util.Scanner;
+import datahandling.*;
 
 /**
  * DBConnecter holds exactly one database connection. Its follows the Singleton
@@ -15,7 +16,7 @@ public class DBConnector {
 	private static DBConnector instance = null;
 	private static String driver = "org.postgresql.Driver";
 	private static String baseURL = "jdbc:postgresql:";
-	private static String schemaPath = "../Datenbankschema/scriptSQL";
+	private static String schemaPath = "Datenbankschema/scriptSQL";
 
 	public Connection connection = null;
 
@@ -120,10 +121,13 @@ public class DBConnector {
 	 * Drops all tables from the database and re-inserts all data through the
 	 * data handlers.
 	 */
-	public void resetDB() {
+	public void resetDB() throws IOException, SQLException {
 		executeSqlScript(DBConnector.schemaPath);
 
-		//TODO: run all data handlers here (or wrapper method)
+		//TODO: run all data handlers here
+		AbstractDataHandler handler;
+		handler = new MovieDataHandler();
+		handler.parse();
 	}
 
 	/**
