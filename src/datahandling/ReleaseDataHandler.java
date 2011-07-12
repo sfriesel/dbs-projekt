@@ -9,10 +9,6 @@ import database.DBConnector;
 
 public class ReleaseDataHandler extends AbstractDataHandler {
 
-	static final private String filename = "Daten/release-dates.list";
-	static final private int lineNumber = 14;
-	static final private String pattern = "\t+";
-
 	private PreparedStatement updateMovStmt;
 	private PreparedStatement selectMovStmt;
 
@@ -22,7 +18,7 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 	private boolean isUSA = false;
 
 	public ReleaseDataHandler() {
-		super(filename, lineNumber, pattern);
+		super("Daten/release-dates.list", 14, 0, "\t+");
 
 		// get database connection
 		con = DBConnector.getInstance();

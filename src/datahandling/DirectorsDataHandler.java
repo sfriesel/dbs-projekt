@@ -5,15 +5,11 @@ import java.sql.SQLException;
 import database.DBConnector;
 
 public class DirectorsDataHandler extends AbstractDataHandler {
-
-	static final private String filename = "Daten/directors.list";
-	static final private int lineNumber = 264;
-	static final private String pattern = "\t+";
 	
 	static private DBConnector con;
 
 	public DirectorsDataHandler() {
-		super(filename, lineNumber, pattern);
+		super("Daten/directors.list", 264, 0, "\t+");
 
 		// get database connection
 		con = DBConnector.getInstance();

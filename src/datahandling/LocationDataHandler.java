@@ -8,10 +8,6 @@ import database.DBConnector;
 
 public class LocationDataHandler extends AbstractDataHandler {
 
-	static final private String filename = "Daten/locations.list";
-	static final private int lineNumber = 264;
-	static final private String pattern = "\t+";
-
 	private PreparedStatement insertLocToLocationStmt = null;
 	private PreparedStatement insertShotInStmt = null;
 	private PreparedStatement selectLocationStmt = null;
@@ -21,7 +17,7 @@ public class LocationDataHandler extends AbstractDataHandler {
 
 	public LocationDataHandler() {
 
-		super(filename, lineNumber, pattern);
+		super("Daten/locations.list", 264, 0, "\t+");
 
 		// get database connection
 		con = DBConnector.getInstance();

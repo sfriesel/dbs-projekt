@@ -6,14 +6,10 @@ import database.DBConnector;
 
 public class PlotDataHandler extends AbstractDataHandler {
 	
-	static final private String filename = "Daten/plot.list";
-	static final private int lineNumber = 1;
-	static final private String pattern = "\t+";
-	
 	static private DBConnector con;
 
 	public PlotDataHandler() {
-		super(filename, lineNumber, pattern);
+		super("Daten/plot.list", 1, 0, "\t+");
 		con = DBConnector.getInstance();
 	}
 

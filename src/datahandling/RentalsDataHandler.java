@@ -8,12 +8,13 @@ public class RentalsDataHandler extends AbstractDataHandler {
 	
 	static final private String filename = "Daten/rentals.list";
 	static final private int lineNumber = 1;
+	static final private int endLineNumber = 0;
 	static final private String pattern = "\t+";
 	
 	static private DBConnector con;
 	
 	public RentalsDataHandler() {
-		super(filename, lineNumber, pattern);
+		super(filename, lineNumber, endLineNumber, pattern);
 
 		// get database connection
 		con = DBConnector.getInstance();

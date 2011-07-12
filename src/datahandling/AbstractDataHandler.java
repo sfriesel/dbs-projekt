@@ -10,20 +10,31 @@ import java.sql.SQLException;
 
 import database.DBConnector;
 
+/***
+ * 
+ * @author alexa
+ * 
+ */
 public abstract class AbstractDataHandler {
 
 	private BufferedReader reader = null;
 
+	// pattern the line is splitted
 	private String pattern;
 	private String filename;
-	private int lineNumber;
+	// the numbers of lines, which are skipped in the beginning
+	private int skipLineNumber;
+	// the last line, which is parsed
+	private int endLineNumber;
 
 	private int commitCounter = 0;
 	private static final int transaction = 5000;
 
-	public AbstractDataHandler(String filename, int lineNumber, String pattern) {
+	public AbstractDataHandler(String filename, int skipLineNumber,
+			int endLineNumber, String pattern) {
 		this.filename = filename;
-		this.lineNumber = lineNumber;
+		this.skipLineNumber = skipLineNumber;
+		this.endLineNumber = endLineNumber;
 		this.pattern = pattern;
 	}
 
@@ -45,8 +56,8 @@ public abstract class AbstractDataHandler {
 	 * @param lineNumber
 	 *            The number of lines to be skipped.
 	 */
-	protected void skipHeader(int lineNumber) throws IOException {
-		for (int i = 0; i < lineNumber; i++) {
+	protected void skipHeader(int skipLineNumber) throws IOException {
+		for (int i = 0; i < skipLineNumber; i++) {
 			reader.readLine();
 		}
 	}
@@ -58,16 +69,16 @@ public abstract class AbstractDataHandler {
 	public void parse() throws IOException, SQLException {
 
 		open(filename);
-		skipHeader(lineNumber);
+		skipHeader(skipLineNumber);
 		prepareStatements();
 
-		String stringLine = null;
 		String[] arrayLine = null;
 
 		DBConnector con = DBConnector.getInstance();
 
-		while ((stringLine = reader.readLine()) != null) {
-			arrayLine = stringLine.split(pattern);
+		for (int i = 0; i < endLineNumber - skipLineNumber; i++) {
+
+			arrayLine = reader.readLine().split(pattern);
 			insertDB(arrayLine);
 
 			commitCounter++;
@@ -81,7 +92,7 @@ public abstract class AbstractDataHandler {
 		if (commitCounter > 0) {
 			con.connection.commit();
 		}
-		
+
 		closeStatements();
 	}
 

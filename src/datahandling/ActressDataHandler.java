@@ -6,14 +6,10 @@ import database.DBConnector;
 
 public class ActressDataHandler extends AbstractDataHandler {
 
-	static final private String filename = "Daten/actresses.list";
-	static final private int lineNumber = 1;
-	static final private String pattern = "\t+";
-
 	static private DBConnector con;
 
 	public ActressDataHandler() {
-		super(filename, lineNumber, pattern);
+		super("Daten/actresses.list", 1, 0, "\t+");
 
 		con = DBConnector.getInstance();
 	}

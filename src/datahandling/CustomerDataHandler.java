@@ -7,15 +7,11 @@ import database.DBConnector;
 
 public class CustomerDataHandler extends AbstractDataHandler {
 
-	static final private String filename = "Daten/customers.list";
-	static final private int lineNumber = 1;
-	static final private String pattern = ",";
-
 	private PreparedStatement insertStmt; final DBConnector con;
 
 	public CustomerDataHandler() {
 
-		super(filename, lineNumber, pattern);
+		super("Daten/customers.list", 1, 0, ",");
 
 		// get database connection
 		this.con = DBConnector.getInstance();

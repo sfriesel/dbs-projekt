@@ -3,6 +3,7 @@ package testing;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import database.DBConnector;
 import datahandling.AbstractDataHandler;
 import datahandling.ActorsDataHandler;
 import datahandling.CustomerDataHandler;
@@ -12,6 +13,9 @@ import datahandling.ReleaseDataHandler;
 
 public class TestDataHandlers {
 	public static void main(String[] args) {
+		
+		DBConnector.configure(
+				"localhost", "5432", "movies", "alexa", "dinkel");
 
 		// AbstractDataHandler handler1 = new CustomerDataHandler();
 		// handler1.parse();
