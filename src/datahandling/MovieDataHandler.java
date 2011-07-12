@@ -11,7 +11,7 @@ public class MovieDataHandler extends AbstractDataHandler {
 	static final private int lineNumber = 4;
 	static final private String pattern = "\t+";
 
-	private PreparedStatement insertStmt = null;
+	private PreparedStatement insertMovStmt = null;
 
 	private final DBConnector con;
 
@@ -34,21 +34,21 @@ public class MovieDataHandler extends AbstractDataHandler {
 		if (arrayLine.length == 3
 				&& DataHandlerUtils.isInTimeRange(arrayLine[1])) {
 
-			insertStmt.setString(1, arrayLine[0]);
-			insertStmt.setString(2, arrayLine[2]);
-			insertStmt.execute();
+			insertMovStmt.setString(1, arrayLine[0]);
+			insertMovStmt.setString(2, arrayLine[2]);
+			insertMovStmt.execute();
 		}
 	}
 
 	@Override
 	protected void closeStatements() throws SQLException {
-		insertStmt.close();
+		insertMovStmt.close();
 
 	}
 
 	@Override
 	protected void prepareStatements() throws SQLException {
-		insertStmt = con.connection.prepareStatement("insert into movie"
+		insertMovStmt = con.connection.prepareStatement("insert into movie"
 				+ "(title, category)" + "VALUES (?,?);");
 	}
 }
