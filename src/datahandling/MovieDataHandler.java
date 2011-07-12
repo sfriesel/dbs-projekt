@@ -36,12 +36,14 @@ public class MovieDataHandler extends AbstractDataHandler {
 
 			insertMovStmt.setString(1, arrayLine[0]);
 			insertMovStmt.setString(2, arrayLine[2]);
-			insertMovStmt.execute();
+			insertMovStmt.addBatch();
 		}
 	}
 
 	@Override
 	protected void closeStatements() throws SQLException {
+		insertMovStmt.executeBatch();
+		con.connection.commit();
 		insertMovStmt.close();
 
 	}
