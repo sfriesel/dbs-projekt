@@ -29,17 +29,6 @@ CREATE TABLE PriceModel (
 	timeUnit char(1)
 );
 
-CREATE TABLE Rental (
-	transaction integer,
-	priceModel varchar(15),
-	movie varchar(220),
-	start date,
-	duration integer,
-	CONSTRAINT fk_transaction FOREIGN KEY (transaction) REFERENCES Transaction(id),
-	CONSTRAINT fk_pricemodel FOREIGN KEY (priceModel) REFERENCES PriceModel(name),
-	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES Movie(title)
-);
-
 CREATE TABLE Location (
 	country varchar(50),
 	location text PRIMARY KEY
@@ -59,11 +48,21 @@ CREATE TABLE Actor (
 	CONSTRAINT gender_constraint CHECK (gender IN ('m', 'f'))
 );
 
+CREATE TABLE Movie (
+	title varchar(220) PRIMARY KEY,
+	description text,
+	category char(1),
+	release date,
+	rel_country varchar(50),
+	CONSTRAINT cat_constraint CHECK (category IN ('A', 'B'))
+);
+
 CREATE TABLE Starring (
 	movie varchar(220),
-	actor varchar(50),
+	forename varchar(20),
+	lastname varchar(20),
 	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES Movie(title),
-	CONSTRAINT fk_actor FOREIGN KEY (actor) REFERENCES Actor(name)
+	CONSTRAINT fk_actor FOREIGN KEY (forename, lastname) REFERENCES Actor(forename, lastname)
 );
 
 CREATE TABLE ShotIn (
@@ -73,12 +72,14 @@ CREATE TABLE ShotIn (
 	CONSTRAINT fk_location FOREIGN KEY (location) REFERENCES Location(location)
 );
 
-CREATE TABLE Movie (
-	title varchar(220) PRIMARY KEY,
-	description text,
-	category char(1),
-	release date,
-	rel_country varchar(50),
-	CONSTRAINT cat_constraint CHECK (category IN ('A', 'B'))
+CREATE TABLE Rental (
+	transaction integer,
+	priceModel varchar(15),
+	movie varchar(220),
+	start date,
+	duration integer,
+	CONSTRAINT fk_transaction FOREIGN KEY (transaction) REFERENCES Transaction(id),
+	CONSTRAINT fk_pricemodel FOREIGN KEY (priceModel) REFERENCES PriceModel(name),
+	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES Movie(title)
 );
 
