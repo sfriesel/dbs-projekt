@@ -1,7 +1,8 @@
 package database;
 
 import java.sql.*;
-import java.io.File;
+import java.io.*;
+import java.util.Scanner;
 
 /**
  * DBConnecter holds exactly one database connection. Its follows the Singleton
@@ -14,7 +15,7 @@ public class DBConnector {
 	private static DBConnector instance = null;
 	private static String driver = "org.postgresql.Driver";
 	private static String baseURL = "jdbc:postgresql:";
-	private static String schemaPath = "../../Datenbankschema/scriptSQL";
+	private static String schemaPath = "../Datenbankschema/scriptSQL";
 
 	public Connection connection = null;
 
@@ -40,11 +41,11 @@ public class DBConnector {
 	                             String database,
 	                             String user,
 	                             String password) {
-		if(instance != null) {
+		if(instance == null) {
 			instance = new DBConnector(host, port, database, user, password);
 		} else {
 			System.err.println("Error: trying to reconfigure an existing database connection");
-			Thread.currentThread().printStackTrace();
+			Thread.currentThread().dumpStack();
 			System.exit(1);
 		}
 	}
@@ -52,7 +53,7 @@ public class DBConnector {
 	public static DBConnector getInstance() {
 		if (instance == null) {
 			System.out.println("Error: database connection not configured before instantiation");
-			Thread.currentThread().printStackTrace();
+			Thread.currentThread().dumpStack();
 			System.exit(1);
 		}
 		return instance;
@@ -99,6 +100,7 @@ public class DBConnector {
 				currentStatement = connection.createStatement();
 				currentStatement.execute(rawStatement);
 			} catch (SQLException e) {
+				System.err.println("Failed to execute sql statement: " + rawStatement);
 				e.printStackTrace();
 			} finally {
 				// Release resources
