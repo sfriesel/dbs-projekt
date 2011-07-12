@@ -124,9 +124,24 @@ public class DBConnector {
 	public void resetDB() throws IOException, SQLException {
 		executeSqlScript(DBConnector.schemaPath);
 
-		//TODO: run all data handlers here
 		AbstractDataHandler handler;
+		handler = new DirectorsDataHandler();
+		handler.parse();
+		//handler = new ActressDataHandler();
+		//handler.parse();
+		//handler = new ActorsDataHandler();
+		//handler.parse();
+		handler = new LocationDataHandler();
+		handler.parse();
 		handler = new MovieDataHandler();
+		handler.parse();
+		handler = new PlotDataHandler();
+		handler.parse();
+		handler = new ReleaseDataHandler();
+		handler.parse();
+		handler = new CustomerDataHandler();
+		handler.parse();
+		handler = new RentalsDataHandler();
 		handler.parse();
 	}
 
