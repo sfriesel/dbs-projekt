@@ -48,7 +48,7 @@ public class MovieDataHandler extends AbstractDataHandler {
 
 	@Override
 	protected void prepareStatements() throws SQLException {
-		insertMovStmt = con.connection.prepareStatement("insert into movie"
-				+ "(title, category)" + "VALUES (?,?);");
+		insertMovStmt = con.connection.prepareStatement("insert into movie "
+				+ "(title, category)" + " VALUES (?,?);");
 	}
 }
