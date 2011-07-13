@@ -7,17 +7,12 @@ import database.DBConnector;
 
 public class MovieDataHandler extends AbstractDataHandler {
 
-	static final private String filename = "Daten/modmovies.list";
-	static final private int lineNumber = 4;
-	static final private int endLineNumber = 0;
-	static final private String pattern = "\t+";
-
 	private PreparedStatement insertMovStmt = null;
 
 	private final DBConnector con;
 
 	public MovieDataHandler() {
-		super(filename, lineNumber, endLineNumber, pattern);
+		super("Daten/modmovies.list", 4, 124769, "\t+");
 
 		// get database connection
 		con = DBConnector.getInstance();

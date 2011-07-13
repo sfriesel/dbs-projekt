@@ -18,7 +18,7 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 	private boolean isUSA = false;
 
 	public ReleaseDataHandler() {
-		super("Daten/release-dates.list", 14, 0, "\t+");
+		super("Daten/release-dates.list", 14, 2304630, "\t+");
 
 		// get database connection
 		con = DBConnector.getInstance();
