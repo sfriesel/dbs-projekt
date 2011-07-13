@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS Actor CASCADE;
 DROP TABLE IF EXISTS Starring CASCADE;
 DROP TABLE IF EXISTS ShotIn CASCADE;
 DROP TABLE IF EXISTS Movie CASCADE;
+DROP TABLE IF EXISTS DirectedBy CASCADE;
 
 CREATE TABLE Customer (
 	id integer PRIMARY KEY,
@@ -35,9 +36,7 @@ CREATE TABLE Location (
 );
 
 CREATE TABLE Director (
-	forename varchar(20),
-	lastname varchar(20),
-	CONSTRAINT pk_direktor PRIMARY KEY (forename, lastname)
+	name varchar(100) PRIMARY KEY
 );
 
 CREATE TABLE Actor (
@@ -78,13 +77,17 @@ CREATE TABLE DirectedBy (
 );
 
 CREATE TABLE Rental (
-	transaction integer,
+	customer integer,
 	priceModel varchar(15),
 	movie varchar(220),
-	start date,
+	start timestamp,
 	duration integer,
-	CONSTRAINT fk_transaction FOREIGN KEY (transaction) REFERENCES Transaction(id),
 	CONSTRAINT fk_pricemodel FOREIGN KEY (priceModel) REFERENCES PriceModel(name),
-	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES Movie(title)
+	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES Movie(title),
+	CONSTRAINT fk_customer FOREIGN KEY (customer) REFERENCES Customer(id)
 );
 
+INSERT INTO PriceModel (name, timeUnit) VALUES
+('starter', 'd'),
+('speedy', 'h'),
+('flat', 'd');
