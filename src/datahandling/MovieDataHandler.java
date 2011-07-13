@@ -10,12 +10,15 @@ public class MovieDataHandler extends AbstractDataHandler {
 	private PreparedStatement insertMovStmt = null;
 
 	private final DBConnector con;
+	private Cache cache;
+
 
 	public MovieDataHandler() {
 		super("Daten/modmovies.list", 4, 124769, "\t+");
 
 		// get database connection
 		con = DBConnector.getInstance();
+		cache = cache.getInstance();
 	}
 
 	@Override
@@ -33,6 +36,7 @@ public class MovieDataHandler extends AbstractDataHandler {
 			insertMovStmt.setString(1, arrayLine[0]);
 			insertMovStmt.setString(2, arrayLine[2]);
 			insertMovStmt.addBatch();
+			cache.movie.add(arrayLine[0]);
 		}
 	}
 
