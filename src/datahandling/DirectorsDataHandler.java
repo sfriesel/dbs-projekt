@@ -1,10 +1,16 @@
 package datahandling;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import database.DBConnector;
 
 public class DirectorsDataHandler extends AbstractDataHandler {
+	
+	private PreparedStatement selectMovStmt = null;
+	private PreparedStatement selectDirStmt = null;
+	private PreparedStatement insertDirStmt = null;
+	private PreparedStatement insertStarringInStmt = null;
 	
 	static private DBConnector con;
 
@@ -23,8 +29,11 @@ public class DirectorsDataHandler extends AbstractDataHandler {
 
 	@Override
 	protected void insertDB(String[] arrayLine) throws SQLException {
-		// TODO Auto-generated method stub
-
+		if (!arrayLine[0].equals("")){
+			if (arrayLine[0].split(",").length == 1){
+				System.out.println(arrayLine[0]);
+			}
+		}
 	}
 
 	@Override
@@ -32,5 +41,4 @@ public class DirectorsDataHandler extends AbstractDataHandler {
 		// TODO Auto-generated method stub
 
 	}
-
 }

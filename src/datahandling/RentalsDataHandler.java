@@ -20,8 +20,6 @@ public class RentalsDataHandler extends AbstractDataHandler {
 		con = DBConnector.getInstance();
 	}
 
-	
-
 	@Override
 	protected void insertDB(String[] arrayLine) {
 		// TODO Auto-generated method stub
