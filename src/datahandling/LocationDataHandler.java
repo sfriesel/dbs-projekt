@@ -17,7 +17,7 @@ public class LocationDataHandler extends AbstractDataHandler {
 
 	public LocationDataHandler() {
 
-		super("Daten/locations.list", 264, 0, "\t+");
+		super("Daten/locations.list", 264, 532964, "\t+");
 
 		// get database connection
 		con = DBConnector.getInstance();

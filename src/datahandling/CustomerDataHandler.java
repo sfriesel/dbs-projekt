@@ -11,7 +11,7 @@ public class CustomerDataHandler extends AbstractDataHandler {
 
 	public CustomerDataHandler() {
 
-		super("Daten/customers.list", 1, 0, ",");
+		super("Daten/customers.list", 1, 1001, ",");
 
 		// get database connection
 		this.con = DBConnector.getInstance();

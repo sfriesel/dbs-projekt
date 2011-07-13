@@ -9,7 +9,7 @@ public class PlotDataHandler extends AbstractDataHandler {
 	static private DBConnector con;
 
 	public PlotDataHandler() {
-		super("Daten/plot.list", 1, 0, "\t+");
+		super("Daten/plot.list", 15, 3469255, "\t+");
 		con = DBConnector.getInstance();
 	}
 

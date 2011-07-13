@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import database.DBConnector;
 import datahandling.AbstractDataHandler;
-import datahandling.ActorsDataHandler;
+import datahandling.ActorsActressDataHandler;
 import datahandling.CustomerDataHandler;
 import datahandling.LocationDataHandler;
 import datahandling.MovieDataHandler;
@@ -53,9 +53,19 @@ public class TestDataHandlers {
 //			e.printStackTrace();
 //		}
 		
-		AbstractDataHandler handler5 = new ActorsDataHandler();
+		AbstractDataHandler handler5 = new ActorsActressDataHandler("Daten/actors.list", 239 , 11272388, "\t+", "m");
 		try {
 			handler5.parse();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		AbstractDataHandler handler6 = new ActorsActressDataHandler("Daten/actress.list", 241, 6592288, "\t+", "w");
+		try {
+			handler6.parse();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

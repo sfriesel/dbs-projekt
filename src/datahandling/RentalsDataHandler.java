@@ -1,15 +1,20 @@
 package datahandling;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import database.DBConnector;
 
 public class RentalsDataHandler extends AbstractDataHandler {
 	
+	private PreparedStatement selectCustomerIDStmt = null;
+	private PreparedStatement selectMovStmt = null;
+	//private PreparedStatement insert
+	
 	static private DBConnector con;
 	
 	public RentalsDataHandler() {
-		super("Daten/rentals.list", 1, 0, "\t+");
+		super("Daten/rentals.list", 1, 1149, "\t+");
 
 		// get database connection
 		con = DBConnector.getInstance();
@@ -38,5 +43,4 @@ public class RentalsDataHandler extends AbstractDataHandler {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

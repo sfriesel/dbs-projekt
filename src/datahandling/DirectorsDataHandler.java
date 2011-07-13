@@ -9,7 +9,7 @@ public class DirectorsDataHandler extends AbstractDataHandler {
 	static private DBConnector con;
 
 	public DirectorsDataHandler() {
-		super("Daten/directors.list", 264, 0, "\t+");
+		super("Daten/directors.list", 235, 1549103, "\t+");
 
 		// get database connection
 		con = DBConnector.getInstance();
