@@ -26,6 +26,8 @@ public abstract class AbstractDataHandler {
 	private int skipLineNumber;
 	// the last line, which is parsed
 	private int endLineNumber;
+	
+	public int counter = 0;
 
 	private int commitCounter = 0;
 	private static final int transaction = 5000;
@@ -59,6 +61,7 @@ public abstract class AbstractDataHandler {
 	protected void skipHeader(int skipLineNumber) throws IOException {
 		for (int i = 0; i < skipLineNumber; i++) {
 			reader.readLine();
+			counter++;
 		}
 	}
 
@@ -77,6 +80,7 @@ public abstract class AbstractDataHandler {
 		for (int i = 0; i < (endLineNumber - skipLineNumber); i++) {
 
 			String[] arrayLine = reader.readLine().split(pattern);
+			counter++;
 			insertDB(arrayLine);
 
 			commitCounter++;
@@ -92,6 +96,7 @@ public abstract class AbstractDataHandler {
 		}
 
 		closeStatements();
+		counter = 0;
 	}
 
 	/**

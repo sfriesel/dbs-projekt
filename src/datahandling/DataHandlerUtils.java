@@ -2,6 +2,7 @@ package datahandling;
 
 import java.text.SimpleDateFormat;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.Locale;
 
@@ -65,11 +66,34 @@ public class DataHandlerUtils {
 			e.printStackTrace();
 		}
 
-		// change it to s sql date
+		// change it to s SQL date
 		java.sql.Date dt = null;
-
 		long t = date.getTime();
 		dt = new java.sql.Date(t);
+
+		return dt;
+	}
+
+	/**
+	 * 
+	 * @param dateString
+	 * @return
+	 */
+	public static Timestamp stringToTimestamp(String dateString) {
+
+		SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy hh:mm:ss");
+		java.util.Date date = null;
+
+		try {
+			date = format.parse(dateString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		// change it to s SQL date
+		java.sql.Timestamp dt = null;
+		long t = date.getTime();
+		dt = new java.sql.Timestamp(t);
 
 		return dt;
 	}
