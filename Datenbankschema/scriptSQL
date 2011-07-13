@@ -41,10 +41,8 @@ CREATE TABLE Director (
 );
 
 CREATE TABLE Actor (
-	forename varchar(20),
-	lastname varchar(20),
+	name varchar(100) PRIMARY KEY,
 	gender varchar(1),
-	CONSTRAINT pk_actor PRIMARY KEY (forename, lastname),
 	CONSTRAINT gender_constraint CHECK (gender IN ('m', 'f'))
 );
 
@@ -59,17 +57,18 @@ CREATE TABLE Movie (
 
 CREATE TABLE Starring (
 	movie varchar(220),
-	forename varchar(20),
-	lastname varchar(20),
+	name varchar(100),
 	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES Movie(title),
-	CONSTRAINT fk_actor FOREIGN KEY (forename, lastname) REFERENCES Actor(forename, lastname)
+	CONSTRAINT fk_actor FOREIGN KEY (name) REFERENCES Actor(name),
+	CONSTRAINT pk_starring PRIMARY KEY (movie, name)
 );
 
 CREATE TABLE ShotIn (
 	movie varchar(220),
 	location text,
 	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES Movie(title),
-	CONSTRAINT fk_location FOREIGN KEY (location) REFERENCES Location(location)
+	CONSTRAINT fk_location FOREIGN KEY (location) REFERENCES Location(location),
+	CONSTRAINT pk_shotin PRIMARY KEY (movie, location)
 );
 
 CREATE TABLE Rental (
