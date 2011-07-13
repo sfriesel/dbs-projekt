@@ -71,6 +71,7 @@ public abstract class AbstractDataHandler {
 	 */
 	public void parse() throws IOException, SQLException {
 
+		System.out.println("Started parsing " + filename + " ...");
 		open(filename);
 		skipHeader(skipLineNumber);
 		prepareStatements();
@@ -97,6 +98,7 @@ public abstract class AbstractDataHandler {
 
 		closeStatements();
 		counter = 0;
+		System.out.println("Finished parsing " + filename + ".");
 	}
 
 	/**
