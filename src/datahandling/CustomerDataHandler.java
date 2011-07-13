@@ -48,7 +48,7 @@ public class CustomerDataHandler extends AbstractDataHandler {
 
 		insertStmt = con.connection
 				.prepareStatement("insert into customer"
-						+ "(customer_id, surename, forename, street, number, zip, city, telephone)"
+						+ "(id, surname, forename, street, streetnumber, zip, city, telephone)"
 						+ "VALUES (?,?,?,?,?,?,?,?);");
 	}
 }
