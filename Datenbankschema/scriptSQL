@@ -71,6 +71,12 @@ CREATE TABLE ShotIn (
 	CONSTRAINT pk_shotin PRIMARY KEY (movie, location)
 );
 
+CREATE TABLE DirectedBy (
+	movie varchar(220),
+	director varchar(100),
+	CONSTRAINT pk_directedby PRIMARY KEY (movie, director)
+);
+
 CREATE TABLE Rental (
 	transaction integer,
 	priceModel varchar(15),
