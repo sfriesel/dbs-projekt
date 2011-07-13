@@ -10,9 +10,9 @@ import database.DBConnector;
 public class ReleaseDataHandler extends AbstractDataHandler {
 
 	private PreparedStatement updateMovStmt;
-	private PreparedStatement selectMovStmt;
 
 	private final DBConnector con;
+	private final Cache cache;
 
 	private String currentMovie = "";
 	private boolean isUSA = false;
@@ -22,6 +22,7 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 
 		// get database connection
 		con = DBConnector.getInstance();
+		cache = Cache.getInstance();
 	}
 
 	@Override
@@ -32,7 +33,7 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 		// arrayLine[2] -> further infos
 
 		// check for valid release string (country:date)
-		//and year must be >= 2010
+		// and year must be >= 2010
 		if (!DataHandlerUtils.isValidReleaseString(arrayLine[1])
 				|| !DataHandlerUtils.isInTimeRange(arrayLine[1])) {
 			return;
@@ -43,11 +44,7 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 		String country = DataHandlerUtils.extractCountry(arrayLine[1].trim());
 
 		// get the movie from the DB
-		selectMovStmt.setString(1, movieTitle);
-		ResultSet movRS = selectMovStmt.executeQuery();
-
-		// is the movie already in the DB ?
-		if (movRS.next()) {
+		if (cache.movie.contains(movieTitle)) {
 
 			if (currentMovie.equals(movieTitle)) {
 
@@ -83,13 +80,14 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 		updateMovStmt.setDate(1, date);
 		updateMovStmt.setString(2, country);
 		updateMovStmt.setString(3, movieTitle);
-		updateMovStmt.executeUpdate();
+		updateMovStmt.addBatch();
 	}
 
 	@Override
 	protected void closeStatements() throws SQLException {
+		updateMovStmt.executeBatch();
+		con.connection.commit();
 		updateMovStmt.close();
-		selectMovStmt.close();
 	}
 
 	@Override
@@ -97,8 +95,5 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 
 		updateMovStmt = con.connection
 				.prepareStatement("UPDATE Movie SET release = ?, rel_country = ? WHERE title = ?;");
-
-		selectMovStmt = con.connection
-				.prepareStatement("SELECT * FROM Movie WHERE title = ?;");
 	}
 }

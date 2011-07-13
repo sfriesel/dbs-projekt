@@ -1,7 +1,6 @@
 package datahandling;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.DBConnector;
@@ -29,9 +28,8 @@ public class ActorsActressDataHandler extends AbstractDataHandler {
 
 		insertActStmt.executeBatch();
 		con.connection.commit();
-		insertActStmt.executeBatch();
+		insertStarringInStmt.executeBatch();
 		con.connection.commit();
-
 		insertActStmt.close();
 		insertStarringInStmt.close();
 	}
@@ -74,15 +72,11 @@ public class ActorsActressDataHandler extends AbstractDataHandler {
 					cache.actor.add(currentActor);
 					actorIsInDB = true;
 				}
-				else {
-					System.out.println(currentActor);
-				}
 			}
 
 			insertStarringInStmt.setString(1, title);
 			insertStarringInStmt.setString(2, currentActor);
 			insertStarringInStmt.addBatch();
-
 		}
 	}
 

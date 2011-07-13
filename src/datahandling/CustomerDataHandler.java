@@ -7,7 +7,9 @@ import database.DBConnector;
 
 public class CustomerDataHandler extends AbstractDataHandler {
 
-	private PreparedStatement insertStmt; final DBConnector con;
+	private PreparedStatement insertStmt;
+	final DBConnector con;
+	private Cache cache;
 
 	public CustomerDataHandler() {
 
@@ -15,6 +17,7 @@ public class CustomerDataHandler extends AbstractDataHandler {
 
 		// get database connection
 		this.con = DBConnector.getInstance();
+		cache = Cache.getInstance();
 	}
 
 	@Override
@@ -35,11 +38,14 @@ public class CustomerDataHandler extends AbstractDataHandler {
 		insertStmt.setInt(6, Integer.parseInt(arrayLine[4]));
 		insertStmt.setString(7, arrayLine[5]);
 		insertStmt.setString(8, arrayLine[6]);
-		insertStmt.execute();
+		insertStmt.addBatch();
+		cache.customer.add(arrayLine[0]);
 	}
 
 	@Override
 	protected void closeStatements() throws SQLException {
+		insertStmt.executeBatch();
+		con.connection.commit();
 		insertStmt.close();
 	}
 

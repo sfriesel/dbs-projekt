@@ -10,10 +10,9 @@ public class LocationDataHandler extends AbstractDataHandler {
 
 	private PreparedStatement insertLocToLocationStmt = null;
 	private PreparedStatement insertShotInStmt = null;
-	private PreparedStatement selectLocationStmt = null;
-	private PreparedStatement selectMovStmt = null;
 
 	DBConnector con;
+	Cache cache;
 
 	public LocationDataHandler() {
 
@@ -21,6 +20,7 @@ public class LocationDataHandler extends AbstractDataHandler {
 
 		// get database connection
 		con = DBConnector.getInstance();
+		cache = Cache.getInstance();
 	}
 
 	@Override
@@ -42,38 +42,34 @@ public class LocationDataHandler extends AbstractDataHandler {
 		String location = arrayLine[1];
 
 		// get the movie from the DB
-		selectMovStmt.setString(1, title);
-		ResultSet movRS = selectMovStmt.executeQuery();
+		if (cache.movie.contains(title)){
 
-		// is the movie in the DB?
-		if (movRS.next()) {
-
-			// get the location from the DB
-			selectLocationStmt.setString(1, location);
-			ResultSet locRS = selectLocationStmt.executeQuery();
-
-			// is the location in the DB?
-			if (!locRS.next()) {
+			if (!cache.location.contains(location)) {
 
 				// add an entry to the location table
 				insertLocToLocationStmt.setString(1, country);
 				insertLocToLocationStmt.setString(2, location);
-				insertLocToLocationStmt.execute();
+				insertLocToLocationStmt.addBatch();
+				cache.location.add(location);
 			}
 
 			// add also to the shotIn table
 			insertShotInStmt.setString(1, title);
 			insertShotInStmt.setString(2, location);
-			insertShotInStmt.execute();
+			insertShotInStmt.addBatch();
 		}
 	}
 
 	@Override
 	protected void closeStatements() throws SQLException {
+		insertLocToLocationStmt.executeBatch();
+		con.connection.commit();
+		
+		insertShotInStmt.executeBatch();
+		con.connection.commit();
+		
 		insertLocToLocationStmt.close();
 		insertShotInStmt.close();
-		selectLocationStmt.close();
-		selectMovStmt.close();
 	}
 
 	@Override
@@ -84,11 +80,5 @@ public class LocationDataHandler extends AbstractDataHandler {
 
 		insertShotInStmt = con.connection
 				.prepareStatement("INSERT INTO ShotIn (movie,location) VALUES (?,?);");
-
-		selectLocationStmt = con.connection
-				.prepareStatement("SELECT * FROM Location WHERE location = ?;");
-
-		selectMovStmt = con.connection
-				.prepareStatement("SELECT * FROM Movie WHERE title = ?;");
 	}
 }
