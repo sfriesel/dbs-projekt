@@ -32,17 +32,15 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 		// arrayLine[2] -> further infos
 
 		// check for valid release string (country:date)
-		if (!DataHandlerUtils.isValidReleaseString(arrayLine[1])) {
+		//and year must be >= 2010
+		if (!DataHandlerUtils.isValidReleaseString(arrayLine[1])
+				|| !DataHandlerUtils.isInTimeRange(arrayLine[1])) {
 			return;
 		}
-		
+
 		String movieTitle = arrayLine[0].trim();
 		Date date = DataHandlerUtils.extractDate(arrayLine[1]);
-		String country = DataHandlerUtils.extractCountry(arrayLine[1]);
-		
-		// year must be >= 2010
-		if (!DataHandlerUtils.isInTimeRange(date.toString()))
-				return;
+		String country = DataHandlerUtils.extractCountry(arrayLine[1].trim());
 
 		// get the movie from the DB
 		selectMovStmt.setString(1, movieTitle);
