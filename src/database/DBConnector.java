@@ -21,11 +21,8 @@ public class DBConnector {
 
 	public Connection connection = null;
 
-	private DBConnector(String host,
-	                    String port,
-	                    String database,
-	                    String user,
-	                    String password) {
+	private DBConnector(String host, String port, String database, String user,
+			String password) {
 		DBConnector.loadJdbcDriver();
 		try {
 			String url = getUrl(host, port, database);
@@ -38,15 +35,13 @@ public class DBConnector {
 		}
 	}
 
-	public static void configure(String host,
-	                             String port,
-	                             String database,
-	                             String user,
-	                             String password) {
-		if(instance == null) {
+	public static void configure(String host, String port, String database,
+			String user, String password) {
+		if (instance == null) {
 			instance = new DBConnector(host, port, database, user, password);
 		} else {
-			System.err.println("Error: trying to reconfigure an existing database connection");
+			System.err
+					.println("Error: trying to reconfigure an existing database connection");
 			Thread.currentThread().dumpStack();
 			System.exit(1);
 		}
@@ -54,7 +49,8 @@ public class DBConnector {
 
 	public static DBConnector getInstance() {
 		if (instance == null) {
-			System.out.println("Error: database connection not configured before instantiation");
+			System.out
+					.println("Error: database connection not configured before instantiation");
 			Thread.currentThread().dumpStack();
 			System.exit(1);
 		}
@@ -75,8 +71,9 @@ public class DBConnector {
 	}
 
 	/**
-	 * Execute the sql statements given in inputFile
-	 * based on http://stackoverflow.com/questions/1497569/how-to-execute-sql-script-file-using-jdbc
+	 * Execute the sql statements given in inputFile based on
+	 * http://stackoverflow
+	 * .com/questions/1497569/how-to-execute-sql-script-file-using-jdbc
 	 */
 	private void executeSqlScript(String path) {
 		File inputFile = new File(path);
@@ -86,14 +83,14 @@ public class DBConnector {
 		Scanner scanner;
 		try {
 			scanner = new Scanner(inputFile).useDelimiter(delimiter);
-		} catch(FileNotFoundException e1) {
+		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 			return;
 		}
 
 		// Loop through the SQL file statements
 		Statement currentStatement = null;
-		while(scanner.hasNext()) {
+		while (scanner.hasNext()) {
 
 			// Get statement
 			String rawStatement = scanner.next() + delimiter;
@@ -101,15 +98,16 @@ public class DBConnector {
 				// Execute statement
 				currentStatement = connection.createStatement();
 				currentStatement.execute(rawStatement);
-			} catch(SQLException e) {
-				System.err.println("Failed to execute sql statement: " + rawStatement);
+			} catch (SQLException e) {
+				System.err.println("Failed to execute sql statement: "
+						+ rawStatement);
 				e.printStackTrace();
 			} finally {
 				// Release resources
-				if(currentStatement != null) {
+				if (currentStatement != null) {
 					try {
 						currentStatement.close();
-					} catch(SQLException e) {
+					} catch (SQLException e) {
 						e.printStackTrace();
 					}
 				}
@@ -125,25 +123,33 @@ public class DBConnector {
 	public void resetDB() throws IOException, SQLException {
 		executeSqlScript(DBConnector.schemaPath);
 
-		AbstractDataHandler handler;
-		handler = new DirectorsDataHandler();
+		AbstractDataHandler handler = new CustomerDataHandler();
 		handler.parse();
-		//handler = new ActressDataHandler();
-		//handler.parse();
-		//handler = new ActorsDataHandler();
-		//handler.parse();
-		handler = new LocationDataHandler();
-		handler.parse();
+		
 		handler = new MovieDataHandler();
 		handler.parse();
-		handler = new PlotDataHandler();
-		handler.parse();
+		
 		handler = new ReleaseDataHandler();
 		handler.parse();
-		handler = new CustomerDataHandler();
+		
+		handler = new DirectorsDataHandler();
 		handler.parse();
+		
+		handler = new LocationDataHandler();
+		handler.parse();
+		
 		handler = new RentalsDataHandler();
 		handler.parse();
+		
+		handler = new ActorsActressDataHandler("Daten/actors.list", 239, 11272388, "\t+", "m");
+		handler.parse();
+		
+		//TODO: have a look if actresses works
+		
+//		handler = new ActorsActressDataHandler("Daten/actresses.list", 241, 6592286, "\t+", "f");
+//		handler.parse();
+		
+		//TODO: execute PlotDH
 	}
 
 	/**
@@ -153,7 +159,7 @@ public class DBConnector {
 	 */
 	private static String getUrl(String host, String port, String database) {
 		String url = baseURL;
-		if(host != null) {
+		if (host != null) {
 			url += "//" + host + (port != null ? ":" + port : "") + "/";
 		}
 		url += database;
