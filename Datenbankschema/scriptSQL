@@ -57,10 +57,10 @@ CREATE TABLE Movie (
 
 CREATE TABLE Starring (
 	movie varchar(220),
-	name varchar(100),
+	actor varchar(100),
 	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES Movie(title),
-	CONSTRAINT fk_actor FOREIGN KEY (name) REFERENCES Actor(name),
-	CONSTRAINT pk_starring PRIMARY KEY (movie, name)
+	CONSTRAINT fk_actor FOREIGN KEY (actor) REFERENCES Actor(name),
+	CONSTRAINT pk_starring PRIMARY KEY (movie, actor)
 );
 
 CREATE TABLE ShotIn (
