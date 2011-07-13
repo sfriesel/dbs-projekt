@@ -72,13 +72,11 @@ public abstract class AbstractDataHandler {
 		skipHeader(skipLineNumber);
 		prepareStatements();
 
-		String[] arrayLine = null;
-
 		DBConnector con = DBConnector.getInstance();
 
-		for (int i = 0; i < endLineNumber - skipLineNumber; i++) {
+		for (int i = 0; i < (endLineNumber - skipLineNumber); i++) {
 
-			arrayLine = reader.readLine().split(pattern);
+			String[] arrayLine = reader.readLine().split(pattern);
 			insertDB(arrayLine);
 
 			commitCounter++;
@@ -89,7 +87,7 @@ public abstract class AbstractDataHandler {
 			}
 		}
 
-		if (commitCounter > 0) {
+		if (commitCounter >= 0) {
 			con.connection.commit();
 		}
 
