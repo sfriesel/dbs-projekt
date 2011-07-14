@@ -58,6 +58,7 @@ public class CustomerDataHandler extends AbstractDataHandler {
 
 	@Override
 	protected void executeBatches() throws SQLException {
+		insertStmt.executeBatch();
 		con.connection.commit();
 	}
 }

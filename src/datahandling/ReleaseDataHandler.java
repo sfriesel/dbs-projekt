@@ -34,7 +34,7 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 		// check for valid release string (country:date)
 		// and year must be >= 2010
 		if (!DataHandlerUtils.isValidReleaseString(arrayLine[1])
-				|| !DataHandlerUtils.isInTimeRange(arrayLine[1])) {
+				|| !DataHandlerUtils.isInTimeRange(arrayLine[0])) {
 			return;
 		}
 

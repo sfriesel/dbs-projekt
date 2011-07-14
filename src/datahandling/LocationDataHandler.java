@@ -2,6 +2,7 @@ package datahandling;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashSet;
 
 import database.DBConnector;
 
@@ -12,6 +13,8 @@ public class LocationDataHandler extends AbstractDataHandler {
 
 	private DBConnector con;
 	private Cache cache;
+	private HashSet<String> locationCache;
+	private HashSet<String> shotInCache;
 
 	public LocationDataHandler() {
 
@@ -20,6 +23,8 @@ public class LocationDataHandler extends AbstractDataHandler {
 		// get database connection
 		con = DBConnector.getInstance();
 		cache = Cache.getInstance();
+		locationCache = new HashSet<String>();
+		shotInCache = new HashSet<String>();
 	}
 
 	@Override
@@ -43,27 +48,29 @@ public class LocationDataHandler extends AbstractDataHandler {
 		// get the movie from the cache
 		if (cache.movie.contains(title)) {
 
-			if (!cache.location.contains(location)) {
+			if (!locationCache.contains(location)) {
 
 				// add an entry to the location table
 				insertLocToLocationStmt.setString(1, country);
 				insertLocToLocationStmt.setString(2, location);
 				insertLocToLocationStmt.addBatch();
-				cache.location.add(location);
+				locationCache.add(location);
 			}
 
-			if (!cache.shotIn.contains(title + "\t" + location)) {
+			if (!shotInCache.contains(title + "\t" + location)) {
 				// add also to the shotIn table
 				insertShotInStmt.setString(1, title);
 				insertShotInStmt.setString(2, location);
 				insertShotInStmt.addBatch();
-				cache.shotIn.add(title + "\t" + location);
+				shotInCache.add(title + "\t" + location);
 			}
 		}
 	}
 
 	@Override
 	protected void closeStatements() throws SQLException {
+		locationCache = null;
+		shotInCache = null;
 		insertLocToLocationStmt.close();
 		insertShotInStmt.close();
 	}

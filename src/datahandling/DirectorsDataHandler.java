@@ -2,6 +2,7 @@ package datahandling;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashSet;
 
 import database.DBConnector;
 
@@ -11,7 +12,9 @@ public class DirectorsDataHandler extends AbstractDataHandler {
 	private PreparedStatement insertDirectedByStmt = null;
 
 	private DBConnector con;
-	private Cache cache = null;
+	private Cache cache;
+	private HashSet<String> directorCache;
+	private HashSet<String> directedByCache;
 
 	public DirectorsDataHandler() {
 		super("Daten/directors.list", 235, 1549103, "\t+");
@@ -19,10 +22,14 @@ public class DirectorsDataHandler extends AbstractDataHandler {
 		// get database connection
 		con = DBConnector.getInstance();
 		cache = Cache.getInstance();
+		directorCache = new HashSet<String>();
+		directedByCache = new HashSet<String>();
 	}
 
 	@Override
 	protected void closeStatements() throws SQLException {
+		directorCache = null;
+		directedByCache = null;
 		insertDirStmt.close();
 		insertDirectedByStmt.close();
 	}
@@ -49,6 +56,10 @@ public class DirectorsDataHandler extends AbstractDataHandler {
 			currentDirector = director;
 		}
 
+		// ignore movies, which do not contain 2010/2011
+		if (!DataHandlerUtils.isInTimeRange(title))
+			return;
+
 		// get the movie from the DB
 		if (cache.movie.contains(title)) {
 
@@ -57,23 +68,23 @@ public class DirectorsDataHandler extends AbstractDataHandler {
 
 				// check weather it was added before some time
 
-				if (!cache.director.contains(currentDirector)) {
+				if (!directorCache.contains(currentDirector)) {
 
 					// add director to DB
 					insertDirStmt.setString(1, currentDirector);
 					insertDirStmt.addBatch();
 					directorIsInDB = true;
-					cache.director.add(currentDirector);
+					directorCache.add(currentDirector);
 				}
 			}
 
 			// is the tuple (movie,director) already in the DB?
-			if (!cache.directedBy.contains(title + "\t" + currentDirector)) {
+			if (!directedByCache.contains(title + "\t" + currentDirector)) {
 
 				insertDirectedByStmt.setString(1, title);
 				insertDirectedByStmt.setString(2, currentDirector);
 				insertDirectedByStmt.addBatch();
-				cache.directedBy.add(title + "\t" + currentDirector);
+				directedByCache.add(title + "\t" + currentDirector);
 			}
 		}
 	}

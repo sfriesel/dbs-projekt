@@ -30,6 +30,10 @@ public class MovieDataHandler extends AbstractDataHandler {
 		// only parse lines, which are in the correct form
 		if (arrayLine.length == 3) {
 
+			// ignore movies, which do not contain 2010/2011
+			if (!DataHandlerUtils.isInTimeRange(arrayLine[0]))
+				return;
+
 			insertMovStmt.setString(1, arrayLine[0]);
 			insertMovStmt.setString(2, arrayLine[2]);
 			insertMovStmt.addBatch();
