@@ -7,8 +7,7 @@ import database.DBConnector;
 public class TestDataHandlers {
 	public static void main(String[] args) {
 		
-		
-		DBConnector.configure("localhost", "5432", "movies", "alexa", "dinkel");
+		DBConnector.configure("localhost", "5432", "movies", "csw", "csw");
 		DBConnector con = DBConnector.getInstance();
 		try {
 			con.resetDB();

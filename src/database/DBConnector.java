@@ -135,8 +135,13 @@ public class DBConnector {
 		handler = new DirectorsDataHandler();
 		handler.parse();
 		
-		handler = new LocationDataHandler();
+		try {handler = new LocationDataHandler();
 		handler.parse();
+		}
+		catch (SQLException e) {
+			System.out.println("fehler bie location.");
+			System.out.println(e.getNextException());
+		}
 		
 		handler = new RentalsDataHandler();
 		handler.parse();
