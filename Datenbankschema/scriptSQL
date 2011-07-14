@@ -40,9 +40,10 @@ CREATE TABLE Director (
 );
 
 CREATE TABLE Actor (
-	name varchar(100) PRIMARY KEY,
+	name varchar(100),
 	gender varchar(1),
-	CONSTRAINT gender_constraint CHECK (gender IN ('m', 'f'))
+	CONSTRAINT gender_constraint CHECK (gender IN ('m', 'f')),
+	CONSTRAINT pk_actor PRIMARY KEY (name, gender)
 );
 
 CREATE TABLE Movie (
@@ -57,9 +58,10 @@ CREATE TABLE Movie (
 CREATE TABLE Starring (
 	movie varchar(220),
 	actor varchar(100),
+	gender varchar(1),
 	CONSTRAINT fk_movie FOREIGN KEY (movie) REFERENCES Movie(title),
-	CONSTRAINT fk_actor FOREIGN KEY (actor) REFERENCES Actor(name),
-	CONSTRAINT pk_starring PRIMARY KEY (movie, actor)
+	CONSTRAINT fk_actor FOREIGN KEY (actor, gender) REFERENCES Actor(name, gender),
+	CONSTRAINT pk_starring PRIMARY KEY (movie, actor, gender)
 );
 
 CREATE TABLE ShotIn (
