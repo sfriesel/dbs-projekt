@@ -34,9 +34,11 @@ public abstract class AbstractDataHandler {
 	 * Counter for keeping track of the read lines.
 	 */
 	public int counter = 0;
+	
+	public static long time = 0;
 
 	private int commitCounter = 0;
-	private static final int transaction = 5000;
+	private static final int transaction = 20000;
 
 	public AbstractDataHandler(String filename, int skipLineNumber,
 			int endLineNumber, String pattern) {
@@ -108,7 +110,9 @@ public abstract class AbstractDataHandler {
 		closeStatements();
 		counter = 0;
 		long after = System.currentTimeMillis();
-		System.out.println("Finished parsing " + filename + " in "+ ((after-before))/1000f +" sec.");
+		long diff = (after-before);
+		time = time + diff;
+		System.out.println("Finished parsing " + filename + " in "+ (diff)/1000f +" sec.");
 	}
 	
 	/**
