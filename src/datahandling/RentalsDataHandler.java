@@ -56,5 +56,6 @@ public class RentalsDataHandler extends AbstractDataHandler {
 	@Override
 	protected void executeBatches() throws SQLException {
 		insertRentalStmt.executeBatch();
+		con.connection.commit();
 	}
 }
