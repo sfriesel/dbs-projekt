@@ -1,7 +1,6 @@
 package datahandling;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Date;
 
@@ -11,8 +10,8 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 
 	private PreparedStatement updateMovStmt;
 
-	private final DBConnector con;
-	private final Cache cache;
+	private DBConnector con;
+	private Cache cache;
 
 	private String currentMovie = "";
 	private boolean isUSA = false;
@@ -85,8 +84,6 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 
 	@Override
 	protected void closeStatements() throws SQLException {
-		updateMovStmt.executeBatch();
-		con.connection.commit();
 		updateMovStmt.close();
 	}
 
@@ -95,5 +92,10 @@ public class ReleaseDataHandler extends AbstractDataHandler {
 
 		updateMovStmt = con.connection
 				.prepareStatement("UPDATE Movie SET release = ?, rel_country = ? WHERE title = ?;");
+	}
+
+	@Override
+	protected void executeBatches() throws SQLException {
+		updateMovStmt.executeBatch();		
 	}
 }

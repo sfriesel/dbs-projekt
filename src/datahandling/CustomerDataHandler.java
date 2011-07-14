@@ -8,7 +8,7 @@ import database.DBConnector;
 public class CustomerDataHandler extends AbstractDataHandler {
 
 	private PreparedStatement insertStmt;
-	final DBConnector con;
+	private DBConnector con;
 	private Cache cache;
 
 	public CustomerDataHandler() {
@@ -44,8 +44,6 @@ public class CustomerDataHandler extends AbstractDataHandler {
 
 	@Override
 	protected void closeStatements() throws SQLException {
-		insertStmt.executeBatch();
-		con.connection.commit();
 		insertStmt.close();
 	}
 
@@ -56,5 +54,10 @@ public class CustomerDataHandler extends AbstractDataHandler {
 				.prepareStatement("insert into customer"
 						+ "(id, surname, forename, street, streetnumber, zip, city, telephone)"
 						+ "VALUES (?,?,?,?,?,?,?,?);");
+	}
+
+	@Override
+	protected void executeBatches() throws SQLException {
+		con.connection.commit();
 	}
 }

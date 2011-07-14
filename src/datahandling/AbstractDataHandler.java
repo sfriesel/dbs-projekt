@@ -7,11 +7,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.util.Timer;
 
 import database.DBConnector;
 
 /***
- * 
+ * AbstactDataHandler is an abstract class, which need to extended by every parser.
  * @author alexa
  * 
  */
@@ -24,9 +26,13 @@ public abstract class AbstractDataHandler {
 	private String filename;
 	// the numbers of lines, which are skipped in the beginning
 	private int skipLineNumber;
-	// the last line, which is parsed
+	/**
+	 * The last line to be parsed.
+	 */ 
 	private int endLineNumber;
-	
+	/**
+	 * Counter for keeping track of the read lines.
+	 */
 	public int counter = 0;
 
 	private int commitCounter = 0;
@@ -70,6 +76,8 @@ public abstract class AbstractDataHandler {
 	 * is splitted at a certain pattern.
 	 */
 	public void parse() throws IOException, SQLException {
+		
+		long before = System.currentTimeMillis();
 
 		System.out.println("Started parsing " + filename + " ...");
 		open(filename);
@@ -86,20 +94,28 @@ public abstract class AbstractDataHandler {
 
 			commitCounter++;
 			if (commitCounter == transaction) {
-
+				executeBatches();
 				con.connection.commit();
 				commitCounter = 0;
 			}
 		}
 
 		if (commitCounter >= 0) {
+			executeBatches();
 			con.connection.commit();
 		}
 
 		closeStatements();
 		counter = 0;
-		System.out.println("Finished parsing " + filename + ".");
+		long after = System.currentTimeMillis();
+		System.out.println("Finished parsing " + filename + " in "+ ((after-before))/1000f +" sec.");
 	}
+	
+	/**
+	 * Here all the batches are executed.
+	 * @throws SQLException
+	 */
+	protected abstract void executeBatches() throws SQLException;
 
 	/**
 	 * Inserts one line into the corresponding database tables. If necessary

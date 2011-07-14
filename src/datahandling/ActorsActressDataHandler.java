@@ -12,8 +12,8 @@ public class ActorsActressDataHandler extends AbstractDataHandler {
 
 	private String gender;
 
-	static private DBConnector con;
-	static private Cache cache;
+	private DBConnector con;
+	private Cache cache;
 
 	public ActorsActressDataHandler(String filename, int skipLineNumber,
 			int endLineNumber, String pattern, String gender) {
@@ -25,11 +25,6 @@ public class ActorsActressDataHandler extends AbstractDataHandler {
 
 	@Override
 	protected void closeStatements() throws SQLException {
-
-		insertActStmt.executeBatch();
-		con.connection.commit();
-		insertStarringInStmt.executeBatch();
-		con.connection.commit();
 		insertActStmt.close();
 		insertStarringInStmt.close();
 	}
@@ -69,6 +64,7 @@ public class ActorsActressDataHandler extends AbstractDataHandler {
 					insertActStmt.setString(1, currentActor);
 					insertActStmt.setString(2, gender);
 					insertActStmt.addBatch();
+					
 					cache.actor.add(currentActor);
 					actorIsInDB = true;
 				}
@@ -88,5 +84,11 @@ public class ActorsActressDataHandler extends AbstractDataHandler {
 
 		insertStarringInStmt = con.connection
 				.prepareStatement("INSERT INTO Starring (movie, actor) VALUES (?,?)");
+	}
+
+	@Override
+	protected void executeBatches() throws SQLException {
+		insertActStmt.executeBatch();
+		insertStarringInStmt.executeBatch();		
 	}
 }

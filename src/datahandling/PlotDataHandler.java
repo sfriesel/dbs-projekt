@@ -6,7 +6,7 @@ import database.DBConnector;
 
 public class PlotDataHandler extends AbstractDataHandler {
 	
-	static private DBConnector con;
+	private DBConnector con;
 
 	public PlotDataHandler() {
 		super("Daten/plot.list", 15, 3469255, "\t+");
@@ -31,4 +31,9 @@ public class PlotDataHandler extends AbstractDataHandler {
 
 	}
 
+	@Override
+	protected void executeBatches() throws SQLException {
+		// TODO Auto-generated method stub
+		
+	}
 }

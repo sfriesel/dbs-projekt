@@ -1,7 +1,6 @@
 package datahandling;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.DBConnector;
@@ -11,7 +10,7 @@ public class DirectorsDataHandler extends AbstractDataHandler {
 	private PreparedStatement insertDirStmt = null;
 	private PreparedStatement insertDirectedByStmt = null;
 
-	static private DBConnector con;
+	private DBConnector con;
 	private Cache cache = null;
 
 	public DirectorsDataHandler() {
@@ -24,12 +23,6 @@ public class DirectorsDataHandler extends AbstractDataHandler {
 
 	@Override
 	protected void closeStatements() throws SQLException {
-		insertDirStmt.executeBatch();
-		con.connection.commit();
-
-		insertDirectedByStmt.executeBatch();
-		con.connection.commit();
-
 		insertDirStmt.close();
 		insertDirectedByStmt.close();
 	}
@@ -74,7 +67,7 @@ public class DirectorsDataHandler extends AbstractDataHandler {
 				}
 			}
 
-			// is the tupel (movie,director) already in the DB?
+			// is the tuple (movie,director) already in the DB?
 			if (!cache.directedBy.contains(title + "\t" + currentDirector)) {
 
 				insertDirectedByStmt.setString(1, title);
@@ -87,11 +80,15 @@ public class DirectorsDataHandler extends AbstractDataHandler {
 
 	@Override
 	protected void prepareStatements() throws SQLException {
-
 		insertDirStmt = con.connection
 				.prepareStatement("INSERT INTO Director (name) VALUES (?)");
-
 		insertDirectedByStmt = con.connection
 				.prepareStatement("INSERT INTO DirectedBy (movie, director) VALUES (?,?)");
+	}
+
+	@Override
+	protected void executeBatches() throws SQLException {
+		insertDirStmt.executeBatch();
+		insertDirectedByStmt.executeBatch();
 	}
 }

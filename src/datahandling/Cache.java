@@ -1,9 +1,6 @@
 package datahandling;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 public class Cache {
 
@@ -15,6 +12,7 @@ public class Cache {
 	public HashSet<String> director = null;
 	public HashSet<String> directedBy = null;
 	public HashSet<String> location = null;
+	public HashSet<String> shotIn = null;
 
 	private Cache() {
 		movie = new HashSet<String>();
@@ -23,6 +21,7 @@ public class Cache {
 		director = new HashSet<String>();
 		directedBy = new HashSet<String>();
 		location = new HashSet<String>();
+		shotIn = new HashSet<String>();
 	}
 
 	public static Cache getInstance() {

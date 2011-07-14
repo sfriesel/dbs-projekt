@@ -1,7 +1,6 @@
 package datahandling;
 
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.DBConnector;
@@ -11,8 +10,8 @@ public class LocationDataHandler extends AbstractDataHandler {
 	private PreparedStatement insertLocToLocationStmt = null;
 	private PreparedStatement insertShotInStmt = null;
 
-	DBConnector con;
-	Cache cache;
+	private DBConnector con;
+	private Cache cache;
 
 	public LocationDataHandler() {
 
@@ -41,8 +40,8 @@ public class LocationDataHandler extends AbstractDataHandler {
 				arrayLine[1].lastIndexOf(",") + 1).trim();
 		String location = arrayLine[1];
 
-		// get the movie from the DB
-		if (cache.movie.contains(title)){
+		// get the movie from the cache
+		if (cache.movie.contains(title)) {
 
 			if (!cache.location.contains(location)) {
 
@@ -53,21 +52,18 @@ public class LocationDataHandler extends AbstractDataHandler {
 				cache.location.add(location);
 			}
 
-			// add also to the shotIn table
-			insertShotInStmt.setString(1, title);
-			insertShotInStmt.setString(2, location);
-			insertShotInStmt.addBatch();
+			if (!cache.shotIn.contains(title + "\t" + location)) {
+				// add also to the shotIn table
+				insertShotInStmt.setString(1, title);
+				insertShotInStmt.setString(2, location);
+				insertShotInStmt.addBatch();
+				cache.shotIn.add(title + "\t" + location);
+			}
 		}
 	}
 
 	@Override
 	protected void closeStatements() throws SQLException {
-		insertLocToLocationStmt.executeBatch();
-		con.connection.commit();
-		
-		insertShotInStmt.executeBatch();
-		con.connection.commit();
-		
 		insertLocToLocationStmt.close();
 		insertShotInStmt.close();
 	}
@@ -77,8 +73,13 @@ public class LocationDataHandler extends AbstractDataHandler {
 		insertLocToLocationStmt = con.connection
 				.prepareStatement("INSERT INTO Location (country, location)"
 						+ "VALUES (?,?);");
-
 		insertShotInStmt = con.connection
 				.prepareStatement("INSERT INTO ShotIn (movie,location) VALUES (?,?);");
+	}
+
+	@Override
+	protected void executeBatches() throws SQLException {
+		insertLocToLocationStmt.executeBatch();
+		insertShotInStmt.executeBatch();
 	}
 }
