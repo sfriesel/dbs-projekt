@@ -1,0 +1,24 @@
+Dokumentation der Designentscheidungen
+
+Filme der Jahre 2010 und 2011
+-----------------------------
+Da es so viele Filme in der DB gibt, haben wir uns der einfachhalthalber dazu entschieden den Filmtitel zu überprüfen, ob
+2010 oder 2011 vorkommt. Daduch wird das parsen erleichtert und es dauert auch nicht mehr ganz so lange. Am wichtigsten war
+uns eine einigermaßen konsistente Datenbasis zu haben. Dadurch kann man schon mal eine Menge Filme schnell rauswerfen, die man 
+eh nicht benötigt.
+
+Primary Keys
+------------
+Wir haben uns dazu entschieden möglichst nur natürliche Primary Keys zu benutzen. Auch wenn es vielleicht wenig Sinn macht den
+Filmtitel ständig herumzutragen. Obwohl sich vielleicht Postgres selbst um die Optimierung kümmert. Customer sind
+die einzigsten mit ID.
+
+Parsen
+------
+Alle kaputten Zeilen werden weggeworfen. Gleichnamige Actors, Actresses sind auch die gleichen, auch wenn sie in der
+Datei an verschiedenen Stellen auftauchen. Das selbe passiert bei den Directors.
+
+DB und Cache
+------------
+Wir benutzen Batch-Exectution um effizient Daten in die DB einzufügen. Um die Konsistenz der Daten zu garantieren und
+die Geschwindgkeit zu erhöhen benutzen wir einen Cache für alle möglichen Daten (Movie, Actor, Dierector, usw.).
