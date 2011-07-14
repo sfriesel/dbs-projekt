@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS Customer CASCADE;
-DROP TABLE IF EXISTS Transaction CASCADE;
 DROP TABLE IF EXISTS PriceModel CASCADE;
 DROP TABLE IF EXISTS Rental CASCADE;
 DROP TABLE IF EXISTS Location CASCADE;
@@ -19,10 +18,6 @@ CREATE TABLE Customer (
 	zip varchar(10),
 	city varchar(20),
 	telephone varchar(15)
-);
-
-CREATE TABLE Transaction (
-	id serial PRIMARY KEY
 );
 
 CREATE TABLE PriceModel (
