@@ -125,36 +125,35 @@ public class DBConnector {
 
 		AbstractDataHandler handler = new CustomerDataHandler();
 		handler.parse();
-		
+
 		handler = new MovieDataHandler();
 		handler.parse();
-		
+
 		handler = new ReleaseDataHandler();
 		handler.parse();
-		
+
 		handler = new DirectorsDataHandler();
 		handler.parse();
-		
-		try {handler = new LocationDataHandler();
+
+		handler = new LocationDataHandler();
 		handler.parse();
-		}
-		catch (SQLException e) {
-			System.out.println("fehler bie location.");
-			System.out.println(e.getNextException());
-		}
-		
+
 		handler = new RentalsDataHandler();
 		handler.parse();
-		
-		handler = new ActorsActressDataHandler("Daten/actors.list", 239, 11272388, "\t+", "m");
+
+		handler = new ActorsActressDataHandler("Daten/actors.list", 239,
+				11272388, "\t+", "m");
 		handler.parse();
-		
-		//TODO: have a look if actresses works
-		
-//		handler = new ActorsActressDataHandler("Daten/actresses.list", 241, 6592286, "\t+", "f");
-//		handler.parse();
-		
-		//TODO: execute PlotDH
+
+		// TODO: have a look if actresses works
+
+		 handler = new ActorsActressDataHandler("Daten/actresses.list", 241,
+		 6592286, "\t+", "f");
+		 handler.parse();
+
+		// TODO: execute PlotDH
+		 
+		 System.out.println(handler.time/1000f/60f+" min");
 	}
 
 	/**
