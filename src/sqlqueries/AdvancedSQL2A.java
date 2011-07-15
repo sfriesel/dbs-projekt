@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 
 import cli.MenuEntry;
-import view.PrintResult;
+import cli.PrintResult;
 import database.DBConnector;
 
 /**

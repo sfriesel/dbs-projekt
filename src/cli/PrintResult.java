@@ -1,5 +1,8 @@
-package view;
+package cli;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PrintResult {
@@ -12,6 +15,23 @@ public class PrintResult {
 
 	public PrintResult() {
 		this.rows = new ArrayList<String[]>();
+	}
+
+	public PrintResult(ResultSet rs) throws SQLException {
+		this.rows = new ArrayList<String[]>();
+
+		ResultSetMetaData metadata = rs.getMetaData();
+		int number = metadata.getColumnCount();
+
+		while (rs.next()) {
+			String[] r = new String[number];
+			for (int i = 0; i < number; i++) {
+				r[i] = rs.getString(i + 1);
+			}
+			addRow(r);
+		}
+		
+		rs.close();
 	}
 
 	public void setDescription(String description) {
@@ -64,6 +84,6 @@ public class PrintResult {
 
 		printLine();
 
-		System.out.println();
+		System.out.println("\n");
 	}
 }

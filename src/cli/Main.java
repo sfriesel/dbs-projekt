@@ -38,6 +38,7 @@ public class Main {
 		menu = new ArrayList<MenuEntry>();
 		menu.add(new ExitEntry());
 		menu.add(new DBHandler());
+		menu.add(new PlainSQL1A());
 		menu.add(new AdvancedSQL2A());
 		menu.add(new AdvancedSQL2B());
 
