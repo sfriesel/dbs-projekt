@@ -23,9 +23,16 @@ CREATE TABLE Customer (
 
 CREATE TABLE PriceModel (
 	name varchar(15) PRIMARY KEY,
-	timeUnit char(1),
-	pricePerUnitA float,
-	pricePerUnitB float
+	timeUnit char(1)
+);
+
+CREATE TABLE Pricing (
+	pricemodel varchar(15),
+	category char(1),
+	pricePerUnit float,
+	CONSTRAINT cat_constraint CHECK (category IN ('A', 'B')),
+	CONSTRAINT pk PRIMARY KEY (pricemodel, category),
+	CONSTRAINT fk_model FOREIGN KEY (pricemodel) REFERENCES PriceModel(name)
 );
 
 CREATE TABLE Location (
@@ -145,7 +152,15 @@ EXPLAIN INSERT INTO Nomination (title, category, year) VALUES
 ('Black Swan (2010)'            , 'actress' , 2011),
 ('Blue Valentine (2010)'        , 'actress' , 2011);
 
-INSERT INTO PriceModel (name, timeUnit, pricePerUnitA, pricePerUnitB) VALUES
-('starter', 'd', 1.29, 0.79),
-('speedy', 'h', 0.19, 0.15),
-('flat', 'd', 0.19, 0.19);
+INSERT INTO PriceModel (name, timeUnit) VALUES
+('starter', 'd'),
+('speedy', 'h'),
+('flat', 'd');
+
+INSERT INTO Pricing (pricemodel, category, pricePerUnit) VALUES
+('starter', 'A', 1.29),
+('starter', 'B', 0.79),
+('speedy', 'A', 0.19),
+('speedy', 'B', 0.15),
+('flat', 'A', 0.19),
+('flat', 'B', 0.19);
