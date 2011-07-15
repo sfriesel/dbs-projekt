@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Statement;
 
+import view.PrintResult;
+
 import database.DBConnector;
 
 /**
@@ -17,24 +19,17 @@ import database.DBConnector;
  */
 public class AdvancedSQL2A {
 
-	static PreparedStatement getMovieTypeStmt = null;
 	static PreparedStatement getRentalWithIDStmt = null;
 	static PreparedStatement getCustomerWithFlatStmt = null;
-
-	// alle Kunden finden, welche Ausleihen hatten mit Modell Flat
-	// gruppiere nach Kunden
-	//
-	// Modell FLAT:
-	// 10€ pro monat
-	// A: 0.19€ pro Tag
-	// B: 0.19€ pro Tag (erster film ist kostenlos)
-	// Modell STARTER
-	// A:1.29€ pro Tag
-	// B:0.79€ pro Tag
 
 	private static DBConnector con;
 
 	public static void execute() throws SQLException {
+		
+		PrintResult pResult = new PrintResult();
+		pResult.setDescription("Alle Kunden die mit dem Preismodell STARTER besser gekommen wären.");
+		String[] head = {"CustomerID", "Price-FLAT", "Price-STARTER"};
+		pResult.setHead(head);
 
 		// get all Customer IDs which used a flat
 		ResultSet idRS = getCustomerWithFlatStmt.executeQuery();
@@ -43,6 +38,7 @@ public class AdvancedSQL2A {
 		while (idRS.next()) {
 
 			int currentMonth = -1;
+			int currentYear = 0;
 			boolean hadFirstBMovie = false;
 			float sumFLAT = 0;
 			float sumSTARTER = 0;
@@ -56,18 +52,20 @@ public class AdvancedSQL2A {
 
 				Timestamp start = rentalRS.getTimestamp("start");
 				int duration = rentalRS.getInt("duration");
-				String title = rentalRS.getString("movie");
+				String type = rentalRS.getString("category");
 
 				// is it a new Month?
-				if (start.getMonth() != currentMonth) {
+				if ((start.getMonth() != currentMonth)
+						|| (start.getMonth() == currentMonth && start.getYear() != currentYear)) {
 
 					// change month and add 10€
 					currentMonth = start.getMonth();
+					currentYear = start.getYear();
 					sumFLAT += 10;
 				}
 
 				// if it was a movie of type A
-				if (getMovieType(title).equals("A")) {
+				if (type.equals("A")) {
 					sumFLAT += 0.19 * duration;
 					sumSTARTER += 1.29 * duration;
 				}
@@ -84,57 +82,45 @@ public class AdvancedSQL2A {
 					else {
 						hadFirstBMovie = true;
 					}
-					
+
 					sumSTARTER += 0.79 * duration;
 				}
 			}
 
 			// falls starter < flat
 			// add to result
-			if (sumSTARTER < sumFLAT)
-				System.out.println(id + "*" + sumSTARTER + "*" + sumFLAT);
-
-			hadFirstBMovie = false;
-			currentMonth = -1;
-			sumFLAT = 0;
-			sumSTARTER = 0;
+			if (sumSTARTER < sumFLAT){
+				String[] row = {String.valueOf(id), String.valueOf(sumFLAT), String.valueOf(sumSTARTER)}; 
+				pResult.addRow(row);
+			}	
 		}
+		pResult.print();
 	}
 
-	private static void prepareStatements() throws SQLException {
+	private static void prepare() throws SQLException {
 
 		// DBConnection
 		DBConnector.configure("localhost", "5432", "movies", "alexa", "dinkel");
 		con = DBConnector.getInstance();
 
-		getMovieTypeStmt = con.connection
-				.prepareStatement("SELECT category FROM Movie WHERE title = ?;");
+		// prepare Statements
 		getRentalWithIDStmt = con.connection
-				.prepareStatement("SELECT * FROM Rental WHERE customer = ? ORDER BY customer;");
+				.prepareStatement("SELECT Rental.start, Rental.duration, Movie.category FROM Rental, "
+						+ "Movie WHERE Movie.title = Rental.movie AND customer = ? ORDER BY start;");
 		getCustomerWithFlatStmt = con.connection
 				.prepareStatement("SELECT DISTINCT customer FROM Rental WHERE pricemodel = 'flat';");
 	}
 
-	private static String getMovieType(String title) throws SQLException {
-		getMovieTypeStmt.setString(1, title);
-		ResultSet rs = getMovieTypeStmt.executeQuery();
-		rs.next();
-		return rs.getString("category");
-	}
-
 	private static ResultSet getRentalsWithID(int id) throws SQLException {
 		getRentalWithIDStmt.setInt(1, id);
-		ResultSet rs = getRentalWithIDStmt.executeQuery();
-		rs.next();
-		return rs;
+		return getRentalWithIDStmt.executeQuery();
 	}
 
 	public static void main(String[] args) {
 		try {
-			prepareStatements();
+			prepare();
 			execute();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			e.getNextException().printStackTrace();
 		}
