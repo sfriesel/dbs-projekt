@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import cli.MenuEntry;
+
 import database.DBConnector;
 
 /**
@@ -24,48 +26,70 @@ import database.DBConnector;
  * @author alexa
  * 
  */
-public class AdvancedSQL2B {
+public class AdvancedSQL2B implements MenuEntry {
 
-	private static DBConnector con;
-	private static PreparedStatement getAllConectedActorStmt = null;
+	PreparedStatement getAllConectedActorStmt;
 
-	private static void prepare() throws SQLException {
-		// DBConnection
-		DBConnector.configure("localhost", "5432", "movies", "alexa", "dinkel");
-		con = DBConnector.getInstance();
-
-		// prepare Statements
-		getAllConectedActorStmt = con.connection
-				.prepareStatement("SELECT actor, gender FROM Starring WHERE movie in "
-						+ "( SELECT movie FROM Starring WHERE actor = ? AND gender = ? ORDER BY movie)"
-						+ "AND NOT (actor = ? AND gender = ?) ORDER BY actor;");
+	@Override
+	public String getName() {
+		return "Kürzeste Verbindung";
 	}
 
-	public static void execute() throws SQLException {
+	@Override
+	public String getDiscription() {
+		return "Die kürzesten Verbindungen zweischen (Jhonny Depp|Timothy Dalton), (Jhonny Depp|August Diehl), "
+				+ "(Bill Murray|Sylvester Stallone) and (Edward Norton|Don Cheadle):";
+	}
 
-		String[][] actorList = {
-				{ "Depp, Johnny", "m", "Diehl, August", "m" },
+	public void execute() throws Exception {
+
+		String[][] actorList = { { "Depp, Johnny", "m", "Diehl, August", "m" },
 				{ "Depp, Johnny", "m", "Dalton, Timothy", "m" },
 				{ "Murray, Bill (I)", "m", "Stallone, Sylvester", "m" },
-				{ "Norton, Edward (I)", "m", "Cheadle, Don", "m" }
-				};
+				{ "Norton, Edward (I)", "m", "Cheadle, Don", "m" } };
+
+		System.out.println("Started calculating ..." + "\n");
 
 		// calculate all shortestPathes
 		for (int i = 0; i < actorList.length; i++) {
+
 			ArrayList<Tupel> result = shortestPath(new Tupel(actorList[i][0],
 					actorList[i][1]), new Tupel(actorList[i][2],
 					actorList[i][3]));
 
-			// TODO print the results in a nice way
-			for (int j = 0; j < result.size(); j++) {
-				System.out.println(result.get(j).toString());
+			// print results
+			System.out.println("[" + actorList[i][0] + "]" + " and " + "["
+					+ actorList[i][2] + "]");
+
+			int length = actorList[i][0].toCharArray().length
+					+ actorList[i][2].toCharArray().length + 9;
+			for (int k = 0; k <= length; k++)
+				System.out.print("-");
+			System.out.print("\r");
+
+			for (int j = 0; j < result.size() - 1; j++) {
+				System.out.print(result.get(j) + " --> ");
 			}
-			System.out.println("----");
+			System.out.println(result.get(result.size()-1) + "\n");
 		}
+
+		getAllConectedActorStmt.close();
 	}
 
-	private static ArrayList<Tupel> shortestPath(Tupel actorFrom, Tupel actorTo)
+	/**
+	 * Implements a BFS to find the shortest path between two actors. If there
+	 * is a path it return a list of all actors found on the way. Returns null
+	 * if nothing is found.
+	 * 
+	 * @param actorFrom
+	 * @param actorTo
+	 * @return
+	 * @throws SQLException
+	 */
+	private ArrayList<Tupel> shortestPath(Tupel actorFrom, Tupel actorTo)
 			throws SQLException {
+
+		boolean found = false;
 
 		HashMap<Tupel, Tupel> path = new HashMap<Tupel, Tupel>();
 		Queue<Tupel> queue = new LinkedList<Tupel>();
@@ -79,7 +103,7 @@ public class AdvancedSQL2B {
 
 			// get the next actor from the queue
 			Tupel value = queue.poll();
-			
+
 			// visited :)
 			visited.add(value);
 
@@ -98,6 +122,7 @@ public class AdvancedSQL2B {
 					if (newActor.equals(actorTo)) {
 						path.put(actorTo, value);
 						actorRS.close();
+						found = true;
 						break bfs;
 
 					} else {
@@ -112,35 +137,43 @@ public class AdvancedSQL2B {
 			actorRS.close();
 		}
 
-		ArrayList<Tupel> result = new ArrayList<Tupel>();
+		if (found) {
+			ArrayList<Tupel> result = new ArrayList<Tupel>();
 
-		// find the way from actorTo to actorFrom
-		do {
-			result.add(actorTo);
-			actorTo = path.get(actorTo);
-		} while (actorTo != null);
+			// find the way from actorTo to actorFrom
+			do {
+				result.add(actorTo);
+				actorTo = path.get(actorTo);
+			} while (actorTo != null);
 
-		return result;
+			return result;
+		}
+
+		return null;
 	}
 
-	private static ResultSet getConnectedActors(Tupel value)
-			throws SQLException {
+	/**
+	 * 
+	 * @param value
+	 * @return
+	 * @throws SQLException
+	 */
+	private ResultSet getConnectedActors(Tupel value) throws SQLException {
+
+		// DBConnection
+		DBConnector con = DBConnector.getInstance();
+
+		// prepare Statements
+		getAllConectedActorStmt = con.connection
+				.prepareStatement("SELECT actor, gender FROM Starring WHERE movie in "
+						+ "( SELECT movie FROM Starring WHERE actor = ? AND gender = ? ORDER BY movie)"
+						+ "AND NOT (actor = ? AND gender = ?) ORDER BY actor;");
+
 		getAllConectedActorStmt.setString(1, value.name);
 		getAllConectedActorStmt.setString(2, value.gender);
 		getAllConectedActorStmt.setString(3, value.name);
 		getAllConectedActorStmt.setString(4, value.gender);
-		return getAllConectedActorStmt.executeQuery();
-	}
 
-	public static void main(String[] args) {
-		try {
-			prepare();
-			execute();
-			System.out.println("Main ende.");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			e.getNextException().printStackTrace();
-		}
+		return getAllConectedActorStmt.executeQuery();
 	}
 }
