@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.util.Timer;
 
 import database.DBConnector;
 
