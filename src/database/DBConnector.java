@@ -4,8 +4,6 @@ import java.sql.*;
 import java.io.*;
 import java.util.Scanner;
 
-import datahandling.*;
-
 /**
  * DBConnecter holds exactly one database connection. Its follows the Singleton
  * design pattern.
@@ -17,7 +15,6 @@ public class DBConnector {
 	private static DBConnector instance = null;
 	private static String driver = "org.postgresql.Driver";
 	private static String baseURL = "jdbc:postgresql:";
-	private static String schemaPath = "Datenbankschema/scriptSQL";
 
 	public Connection connection = null;
 
@@ -42,7 +39,7 @@ public class DBConnector {
 		} else {
 			System.err
 					.println("Error: trying to reconfigure an existing database connection");
-			Thread.currentThread().dumpStack();
+			Thread.dumpStack();
 			System.exit(1);
 		}
 	}
@@ -51,7 +48,7 @@ public class DBConnector {
 		if (instance == null) {
 			System.out
 					.println("Error: database connection not configured before instantiation");
-			Thread.currentThread().dumpStack();
+			Thread.dumpStack();
 			System.exit(1);
 		}
 		return instance;
@@ -75,7 +72,7 @@ public class DBConnector {
 	 * http://stackoverflow
 	 * .com/questions/1497569/how-to-execute-sql-script-file-using-jdbc
 	 */
-	private void executeSqlScript(String path) {
+	public void executeSqlScript(String path) {
 		File inputFile = new File(path);
 		String delimiter = ";";
 
@@ -114,46 +111,6 @@ public class DBConnector {
 				currentStatement = null;
 			}
 		}
-	}
-
-	/**
-	 * Drops all tables from the database and re-inserts all data through the
-	 * data handlers.
-	 */
-	public void resetDB() throws IOException, SQLException {
-		executeSqlScript(DBConnector.schemaPath);
-
-		AbstractDataHandler handler = new CustomerDataHandler();
-		handler.parse();
-
-		handler = new MovieDataHandler();
-		handler.parse();
-
-		handler = new ReleaseDataHandler();
-		handler.parse();
-
-		handler = new DirectorsDataHandler();
-		handler.parse();
-
-		handler = new LocationDataHandler();
-		handler.parse();
-
-		handler = new RentalsDataHandler();
-		handler.parse();
-
-		handler = new ActorsActressDataHandler("Daten/actors.list", 239,
-				11272388, "\t+", "m");
-		handler.parse();
-
-		// TODO: have a look if actresses works
-
-		 handler = new ActorsActressDataHandler("Daten/actresses.list", 241,
-		 6592286, "\t+", "f");
-		 handler.parse();
-
-		// TODO: execute PlotDH
-		 
-		 System.out.println(handler.time/1000f/60f+" min");
 	}
 
 	/**
