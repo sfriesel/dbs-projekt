@@ -8,6 +8,8 @@ public class PrintResult {
 	private String[] head = null;
 	private ArrayList<String[]> rows = null;
 
+	private int numSpaces = 5;
+
 	public PrintResult() {
 		this.rows = new ArrayList<String[]>();
 	}
@@ -16,33 +18,52 @@ public class PrintResult {
 		this.description = description;
 	}
 
-	public void setHead(String[] head) {
+	public void setHead(String... head) {
 		this.head = head;
 	}
 
-	public void addRow(String[] row) {
+	public void addRow(String... row) {
 		this.rows.add(row);
 	}
 
-	public void print() {
-		System.out.println(description);
-		System.out
-				.println("----------------------------------------------------------");
-
-		printLine(head);
-		System.out
-				.println("----------------------------------------------------------");
-
-		for (int i = 0; i < rows.size(); i++) {
-			printLine(rows.get(i));
+	private int getHeadLenght() {
+		int result = 0;
+		for (int i = 0; i < head.length; i++) {
+			result += head[i].toCharArray().length + numSpaces + 3;
 		}
+		return result;
 	}
 
-	public void printLine(String[] array) {
-		for (int i = 0; i < array.length - 1; i++) {
-			System.out.print(array[i] + "\t");
-		}
-		System.out.print(array[array.length - 1]);
+	private void printLine() {
+		for (int i = 0; i < getHeadLenght(); i++)
+			System.out.print("-");
 		System.out.print("\r");
+	}
+
+	public void print() {
+
+		System.out.println(description);
+
+		printLine();
+
+		String format = "";
+
+		for (int i = 0; i < head.length; i++) {
+			format = format.concat("%" + (head[i].length() + numSpaces)
+					+ "s  |");
+		}
+		format = format.concat("\r");
+
+		System.out.printf(format, (Object[]) head);
+
+		printLine();
+
+		for (int i = 0; i < rows.size(); i++) {
+			System.out.printf(format, (Object[]) rows.get(i));
+		}
+
+		printLine();
+
+		System.out.println();
 	}
 }
