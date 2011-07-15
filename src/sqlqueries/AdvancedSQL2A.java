@@ -4,10 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.sql.Statement;
 
+import cli.MenuEntry;
 import view.PrintResult;
-
 import database.DBConnector;
 
 /**
@@ -17,22 +16,30 @@ import database.DBConnector;
  * @author alexa
  * 
  */
-public class AdvancedSQL2A {
+public class AdvancedSQL2A implements MenuEntry {
 
-	static PreparedStatement getRentalWithIDStmt = null;
-	static PreparedStatement getCustomerWithFlatStmt = null;
+	PreparedStatement getCustomerWithFlatStmt;
+	PreparedStatement getRentalWithIDStmt;
 
-	private static DBConnector con;
+	@Override
+	public String getName() {
+		return "FLAT und STARTER";
+	}
 
-	public static void execute() throws SQLException {
-		
+	@Override
+	public String getDiscription() {
+		return "Bestimmen Sie alle Kunden mit Preismodell Flat, welche basierend auf ihren bisherigen "
+				+ "Ausleihvorgängen im Modell Starter billiger weggekommen wären.";
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void execute() throws Exception {
+
 		PrintResult pResult = new PrintResult();
-		pResult.setDescription("Alle Kunden die mit dem Preismodell STARTER besser gekommen wären.");
-		String[] head = {"CustomerID", "Price-FLAT", "Price-STARTER"};
-		pResult.setHead(head);
 
 		// get all Customer IDs which used a flat
-		ResultSet idRS = getCustomerWithFlatStmt.executeQuery();
+		ResultSet idRS = getCustomerWithFlat();
 
 		// as long as there are new customers
 		while (idRS.next()) {
@@ -87,42 +94,40 @@ public class AdvancedSQL2A {
 				}
 			}
 
-			// falls starter < flat
-			// add to result
-			if (sumSTARTER < sumFLAT){
-				String[] row = {String.valueOf(id), String.valueOf(sumFLAT), String.valueOf(sumSTARTER)}; 
-				pResult.addRow(row);
-			}	
+			// falls starter < flat add to result
+			if (sumSTARTER < sumFLAT) {
+				pResult.addRow(String.valueOf(id), String.valueOf(sumFLAT),
+						String.valueOf(sumSTARTER));
+			}
 		}
+
+		pResult.setDescription("Alle Kunden die mit dem Preismodell STARTER besser gekommen wären:");
+		pResult.setHead("CustomerID", "Price-FLAT", "Price-STARTER");
 		pResult.print();
+
+		getCustomerWithFlatStmt.close();
+		getRentalWithIDStmt.close();
 	}
 
-	private static void prepare() throws SQLException {
+	private ResultSet getRentalsWithID(int id) throws SQLException {
 
-		// DBConnection
-		DBConnector.configure("localhost", "5432", "movies", "alexa", "dinkel");
-		con = DBConnector.getInstance();
+		DBConnector con = DBConnector.getInstance();
 
-		// prepare Statements
 		getRentalWithIDStmt = con.connection
 				.prepareStatement("SELECT Rental.start, Rental.duration, Movie.category FROM Rental, "
 						+ "Movie WHERE Movie.title = Rental.movie AND customer = ? ORDER BY start;");
-		getCustomerWithFlatStmt = con.connection
-				.prepareStatement("SELECT DISTINCT customer FROM Rental WHERE pricemodel = 'flat';");
-	}
 
-	private static ResultSet getRentalsWithID(int id) throws SQLException {
 		getRentalWithIDStmt.setInt(1, id);
 		return getRentalWithIDStmt.executeQuery();
 	}
 
-	public static void main(String[] args) {
-		try {
-			prepare();
-			execute();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			e.getNextException().printStackTrace();
-		}
+	private ResultSet getCustomerWithFlat() throws SQLException {
+
+		DBConnector con = DBConnector.getInstance();
+		getCustomerWithFlatStmt = con.connection
+				.prepareStatement("SELECT DISTINCT customer FROM Rental WHERE pricemodel = 'flat';");
+
+		return getCustomerWithFlatStmt.executeQuery();
 	}
+
 }
