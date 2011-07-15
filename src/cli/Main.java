@@ -1,15 +1,17 @@
 package cli;
 
 import database.*;
+import sqlqueries.*;
 import java.io.*;
 import java.sql.SQLException;
 
 public class Main {
 	public static void printMenu() {
 		System.out.println("Please select one of the following options:");
-		System.out.println("(a) Hello World");
+		System.out.println("(a) 5.1a Wie viele Kunden haben sich für welches Preismodell entschieden?");
 		System.out.println("(r) reset db");
 		System.out.println("(q) quit");
+		System.out.print("$ ");
 	}
 	public static void main(String[] args) throws IOException, SQLException {
 		if(args.length < 3) {
@@ -30,7 +32,7 @@ public class Main {
 			input = br.readLine();
 			switch(input.charAt(0)) {
 				case 'a':
-					System.err.println("Hello World");
+					sqlqueries.PlainSQL1a.execute();
 					break;
 				case 'r':
 					DBConnector.getInstance().resetDB();
