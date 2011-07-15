@@ -22,3 +22,7 @@ DB und Cache
 ------------
 Wir benutzen Batch-Exectution um effizient Daten in die DB einzufügen. Um die Konsistenz der Daten zu garantieren und
 die Geschwindgkeit zu erhöhen benutzen wir einen Cache für alle möglichen Daten (Movie, Actor, Dierector, usw.).
+
+Preismodelle
+------------
+Grundgebühr pro Monat bedeutet bei uns pro Kalendermonat.
