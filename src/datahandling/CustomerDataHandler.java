@@ -39,7 +39,7 @@ public class CustomerDataHandler extends AbstractDataHandler {
 		insertStmt.setString(7, arrayLine[5]);
 		insertStmt.setString(8, arrayLine[6]);
 		insertStmt.addBatch();
-		cache.customer.add(arrayLine[0]);
+		cache.customer.add(Integer.parseInt(arrayLine[0]));
 	}
 
 	@Override
