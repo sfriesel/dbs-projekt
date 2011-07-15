@@ -4,12 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
-
-import view.PrintResult;
 
 import database.DBConnector;
 
@@ -28,8 +26,6 @@ import database.DBConnector;
  */
 public class AdvancedSQL2B {
 
-	private static Queue<QueueEntry> queue;
-
 	private static DBConnector con;
 	private static PreparedStatement getAllConectedActorStmt = null;
 
@@ -41,77 +37,110 @@ public class AdvancedSQL2B {
 		// prepare Statements
 		getAllConectedActorStmt = con.connection
 				.prepareStatement("SELECT actor, gender FROM Starring WHERE movie in "
-						+ "( SELECT movie FROM Starring WHERE actor = ? AND gender = ?)"
-						+ "AND actor <> ? ORDER BY actor;");
-
-		queue = new LinkedList<QueueEntry>();
+						+ "( SELECT movie FROM Starring WHERE actor = ? AND gender = ? ORDER BY movie)"
+						+ "AND NOT (actor = ? AND gender = ?) ORDER BY actor;");
 	}
 
-	public static void execute(String actorFrom, String genFrom,
-			String actorTo, String genTo) throws SQLException {
+	public static void execute() throws SQLException {
+
+		String[][] actorList = {
+				{ "Depp, Johnny", "m", "Diehl, August", "m" },
+				{ "Depp, Johnny", "m", "Dalton, Timothy", "m" },
+				{ "Murray, Bill (I)", "m", "Stallone, Sylvester", "m" },
+				{ "Norton, Edward (I)", "m", "Cheadle, Don", "m" }
+				};
+
+		// calculate all shortestPathes
+		for (int i = 0; i < actorList.length; i++) {
+			ArrayList<Tupel> result = shortestPath(new Tupel(actorList[i][0],
+					actorList[i][1]), new Tupel(actorList[i][2],
+					actorList[i][3]));
+
+			// TODO print the results in a nice way
+			for (int j = 0; j < result.size(); j++) {
+				System.out.println(result.get(j).toString());
+			}
+			System.out.println("----");
+		}
+	}
+
+	private static ArrayList<Tupel> shortestPath(Tupel actorFrom, Tupel actorTo)
+			throws SQLException {
+
+		HashMap<Tupel, Tupel> path = new HashMap<Tupel, Tupel>();
+		Queue<Tupel> queue = new LinkedList<Tupel>();
+		HashSet<Tupel> visited = new HashSet<Tupel>();
 
 		// add actorFrom to queue, the first one has no predecessor
-		QueueEntry qe = new QueueEntry(new Tupel(actorFrom, genFrom), new ArrayList<Tupel>());
-		queue.offer(qe);
-
-		boolean found = false;
+		queue.offer(actorFrom);
 
 		// as long as the queue is not empty
-		while (!queue.isEmpty()) {
+		bfs: while (!queue.isEmpty()) {
 
-			QueueEntry value = queue.poll();
-			actorFrom = value.actor.name;
-			genFrom = value.actor.gender;
+			// get the next actor from the queue
+			Tupel value = queue.poll();
+			
+			// visited :)
+			visited.add(value);
 
-			getAllConectedActorStmt.setString(1, actorFrom);
-			getAllConectedActorStmt.setString(2, genFrom);
-			getAllConectedActorStmt.setString(3, actorFrom);
-
-			ResultSet actorRS = getAllConectedActorStmt.executeQuery();
+			ResultSet actorRS = getConnectedActors(value);
 
 			// have a look at all actors
 			while (actorRS.next()) {
 
-				String name = actorRS.getString("actor");
-				String gender = actorRS.getString("gender");
+				Tupel newActor = new Tupel(actorRS.getString("actor"),
+						actorRS.getString("gender"));
 
-				// if we found the actor already
-				if (name.equals(actorTo) && gender.equals(genTo)) {
-					
-					System.out.println("Path:");
-					for (int i = 0; i < value.pre.size(); i++) {
-						System.out.println(value.pre.get(i).name);
+				// only if he was not visited yet
+				if (!visited.contains(newActor)) {
+
+					// if we found the actor already
+					if (newActor.equals(actorTo)) {
+						path.put(actorTo, value);
+						actorRS.close();
+						break bfs;
+
+					} else {
+
+						// add it to the queue and add a tupel to the path
+						queue.offer(newActor);
+						path.put(newActor, value);
+						visited.add(newActor);
 					}
-					found = true;
-					return;
-				} else {
-
-					// add it to the queue and add vorgänger
-					ArrayList<Tupel> newPredecessors = (ArrayList<Tupel>) value.pre
-							.clone();
-					newPredecessors.add(value.actor);
-					QueueEntry newEntry = new QueueEntry(
-							new Tupel(name, gender), newPredecessors);
-					queue.offer(newEntry);
 				}
 			}
-			if (found == true) {
-				queue = null;
-				return;
-			}
+			actorRS.close();
 		}
+
+		ArrayList<Tupel> result = new ArrayList<Tupel>();
+
+		// find the way from actorTo to actorFrom
+		do {
+			result.add(actorTo);
+			actorTo = path.get(actorTo);
+		} while (actorTo != null);
+
+		return result;
+	}
+
+	private static ResultSet getConnectedActors(Tupel value)
+			throws SQLException {
+		getAllConectedActorStmt.setString(1, value.name);
+		getAllConectedActorStmt.setString(2, value.gender);
+		getAllConectedActorStmt.setString(3, value.name);
+		getAllConectedActorStmt.setString(4, value.gender);
+		return getAllConectedActorStmt.executeQuery();
 	}
 
 	public static void main(String[] args) {
 		try {
 			prepare();
-			execute("Depp, Johnny", "m", "Dalton, Timothy", "m");
-			execute("Depp, Johnny", "m", "Diehl, August", "m");
-			execute("Murray, Bill (I)", "m", "Stallone, Sylvester", "m");
-			execute("Norton, Edward (I)", "m", "Cheadle, Don", "m");
+			execute();
+			System.out.println("Main ende.");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			e.getNextException().printStackTrace();
 		}
 	}
 }
