@@ -46,7 +46,7 @@ public class PrintResult {
 		this.rows.add(row);
 	}
 
-	private int getHeadLenght() {
+	private int getHeadLength() {
 		int result = 0;
 		for (int i = 0; i < head.length; i++) {
 			result += head[i].toCharArray().length + numSpaces + 3;
@@ -55,7 +55,7 @@ public class PrintResult {
 	}
 
 	private void printLine() {
-		for (int i = 0; i < getHeadLenght(); i++)
+		for (int i = 0; i < getHeadLength(); i++)
 			System.out.print("-");
 		System.out.print("\r");
 	}
