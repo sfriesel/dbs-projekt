@@ -32,7 +32,7 @@ public class AdvancedSQL2B implements MenuEntry {
 
 	@Override
 	public String getName() {
-		return "Kürzeste Verbindung";
+		return "2B-Kürzeste Verbindung";
 	}
 
 	@Override

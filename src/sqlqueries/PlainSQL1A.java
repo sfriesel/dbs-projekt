@@ -11,7 +11,7 @@ public class PlainSQL1A implements MenuEntry {
 
 	@Override
 	public String getName() {
-		return "Verteilung der Preismodelle";
+		return "1A-Verteilung der Preismodelle";
 	}
 
 	@Override

@@ -6,14 +6,12 @@ public class PlainSQL1B implements MenuEntry {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "1B-Rechnungssummen";
 	}
 
 	@Override
 	public String getDiscription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Die Rechnungssummen für alle Kunden für den Monat Januar.";
 	}
 
 	@Override

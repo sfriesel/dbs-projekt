@@ -6,14 +6,13 @@ public class PlainSQL1C implements MenuEntry {
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return "1C-Oscarfrage";
 	}
 
 	@Override
 	public String getDiscription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Sollte man bestimmte Monate für eine Premiere wählen, um für einen Oscar in den "
+				+ "Kategorien Bester Film/Regisseur/HauptdarstellerIN nominiert zu werden?";
 	}
 
 	@Override

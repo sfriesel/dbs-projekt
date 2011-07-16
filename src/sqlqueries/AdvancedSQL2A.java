@@ -23,7 +23,7 @@ public class AdvancedSQL2A implements MenuEntry {
 
 	@Override
 	public String getName() {
-		return "FLAT und STARTER";
+		return "2A-Flat vs Starter";
 	}
 
 	@Override
