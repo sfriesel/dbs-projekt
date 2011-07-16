@@ -72,7 +72,7 @@ public class PrintResult {
 			format = format.concat("%" + (head[i].length() + numSpaces)
 					+ "s  |");
 		}
-		format = format.concat("\r");
+		format = format.concat("\n");
 
 		System.out.printf(format, (Object[]) head);
 
