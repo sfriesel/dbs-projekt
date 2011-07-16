@@ -5,3 +5,4 @@ bin/
 bin1/
 init
 Datenbankschema/movieDB_ERdiagramm.dia.autosave
+*.class
