@@ -57,7 +57,7 @@ public class PrintResult {
 	private void printLine() {
 		for (int i = 0; i < getHeadLength(); i++)
 			System.out.print("-");
-		System.out.print("\r");
+		System.out.print("\n");
 	}
 
 	public void print() {
