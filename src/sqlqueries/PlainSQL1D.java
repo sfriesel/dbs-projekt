@@ -33,13 +33,14 @@ public class PlainSQL1D implements MenuEntry {
 						+ "ROUND((SELECT CAST("
 						+ "(SELECT count(*) FROM Rental r2 WHERE r2.customer = r1.customer AND r2.movie IN "
 						+ "(SELECT DISTINCT s.movie FROM Location l, shotin s "
-						+  "WHERE s.location = l.location AND l.country <> 'USA')) AS NUMERIC)"
+						+ "WHERE s.location = l.location AND l.country <> 'USA')) AS NUMERIC)"
 						+ "/(SELECT count(*) FROM Rental r3 WHERE r3.customer = r1.customer)*100), 2) AS summe "
 						+ "FROM Rental r1 ORDER BY summe DESC)");
-		
+
 		PrintResult pr = new PrintResult(rs);
 		pr.setHead("customer", "ratio");
-		
+		pr.setDescription("Rangfolge der Customer, welche Filme ausgeliehen haben, die auch nicht in den "
+				+ "USA gedeht worden sind:");
 		pr.print();
 	}
 }
