@@ -99,7 +99,7 @@ public class AdvancedSQL2B implements MenuEntry {
 		queue.offer(actorFrom);
 
 		// as long as the queue is not empty
-		bfs: while (!queue.isEmpty()) {
+		while (!queue.isEmpty()) {
 
 			// get the next actor from the queue
 			Tupel value = queue.poll();
@@ -110,7 +110,7 @@ public class AdvancedSQL2B implements MenuEntry {
 			ResultSet actorRS = getConnectedActors(value);
 
 			// have a look at all actors
-			while (actorRS.next()) {
+			while (!found && actorRS.next()) {
 
 				Tupel newActor = new Tupel(actorRS.getString("actor"),
 						actorRS.getString("gender"));
@@ -121,10 +121,8 @@ public class AdvancedSQL2B implements MenuEntry {
 					// if we found the actor already
 					if (newActor.equals(actorTo)) {
 						path.put(actorTo, value);
-						actorRS.close();
+						queue.clear();
 						found = true;
-						break bfs;
-
 					} else {
 
 						// add it to the queue and add a tupel to the path
@@ -164,15 +162,15 @@ public class AdvancedSQL2B implements MenuEntry {
 		DBConnector con = DBConnector.getInstance();
 
 		// prepare Statements
-		getAllConnectedActorStmt = con.connection
-				.prepareStatement("SELECT actor, gender FROM Starring WHERE movie in "
-						+ "( SELECT movie FROM Starring WHERE actor = ? AND gender = ? ORDER BY movie)"
-						+ "AND NOT (actor = ? AND gender = ?) ORDER BY actor;");
+		if(getAllConnectedActorStmt == null) {
+			getAllConnectedActorStmt = con.connection
+					.prepareStatement("SELECT actor, gender FROM Starring WHERE movie in "
+							+ "( SELECT movie FROM Starring WHERE actor = ? AND gender = ?)"
+							+ " ORDER BY actor;");
+		}
 
 		getAllConnectedActorStmt.setString(1, value.name);
 		getAllConnectedActorStmt.setString(2, value.gender);
-		getAllConnectedActorStmt.setString(3, value.name);
-		getAllConnectedActorStmt.setString(4, value.gender);
 
 		return getAllConnectedActorStmt.executeQuery();
 	}
