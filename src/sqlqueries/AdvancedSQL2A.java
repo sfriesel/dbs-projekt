@@ -27,7 +27,7 @@ public class AdvancedSQL2A implements MenuEntry {
 	}
 
 	@Override
-	public String getDiscription() {
+	public String getDescription() {
 		return "Bestimmen Sie alle Kunden mit Preismodell Flat, welche basierend auf ihren bisherigen "
 				+ "Ausleihvorgängen im Modell Starter billiger weggekommen wären.";
 	}

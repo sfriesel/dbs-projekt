@@ -15,8 +15,8 @@ public class PlainSQL1A implements MenuEntry {
 	}
 
 	@Override
-	public String getDiscription() {
-		return "Wie viele Kunden haben sich für welches Preismodell entschieden?";
+	public String getDescription() {
+		return "Wieviele Kunden haben sich für welches Preismodell entschieden?";
 	}
 
 	public void execute() throws SQLException {
@@ -27,8 +27,8 @@ public class PlainSQL1A implements MenuEntry {
 				+ "FROM rental " + "GROUP BY pricemodel;");
 
 		PrintResult pr = new PrintResult(rs);
-		pr.setHead("Presimodell", "Anzahl der Kunden");
-		pr.setDescription("Übersich über die Verteilung der Preismodelle:");
+		pr.setHead("Preismodell", "Anzahl der Kunden");
+		pr.setDescription("Übersicht über die Verteilung der Preismodelle:");
 		pr.print();
 	}
 }

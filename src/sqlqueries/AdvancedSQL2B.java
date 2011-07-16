@@ -28,7 +28,7 @@ import database.DBConnector;
  */
 public class AdvancedSQL2B implements MenuEntry {
 
-	PreparedStatement getAllConectedActorStmt;
+	PreparedStatement getAllConnectedActorStmt;
 
 	@Override
 	public String getName() {
@@ -36,8 +36,8 @@ public class AdvancedSQL2B implements MenuEntry {
 	}
 
 	@Override
-	public String getDiscription() {
-		return "Die kürzesten Verbindungen zweischen (Jhonny Depp|Timothy Dalton), (Jhonny Depp|August Diehl), "
+	public String getDescription() {
+		return "Die kürzesten Verbindungen zwischen (Johnny Depp|Timothy Dalton), (Johnny Depp|August Diehl), "
 				+ "(Bill Murray|Sylvester Stallone) and (Edward Norton|Don Cheadle):";
 	}
 
@@ -73,12 +73,12 @@ public class AdvancedSQL2B implements MenuEntry {
 			System.out.println(result.get(result.size()-1) + "\n");
 		}
 
-		getAllConectedActorStmt.close();
+		getAllConnectedActorStmt.close();
 	}
 
 	/**
 	 * Implements a BFS to find the shortest path between two actors. If there
-	 * is a path it return a list of all actors found on the way. Returns null
+	 * is a path, it returns a list of all actors found on the way. Returns null
 	 * if nothing is found.
 	 * 
 	 * @param actorFrom
@@ -99,7 +99,7 @@ public class AdvancedSQL2B implements MenuEntry {
 		queue.offer(actorFrom);
 
 		// as long as the queue is not empty
-		bfs: while (!queue.isEmpty()) {
+		while (!queue.isEmpty()) {
 
 			// get the next actor from the queue
 			Tupel value = queue.poll();
@@ -110,7 +110,7 @@ public class AdvancedSQL2B implements MenuEntry {
 			ResultSet actorRS = getConnectedActors(value);
 
 			// have a look at all actors
-			while (actorRS.next()) {
+			while (!found && actorRS.next()) {
 
 				Tupel newActor = new Tupel(actorRS.getString("actor"),
 						actorRS.getString("gender"));
@@ -121,10 +121,8 @@ public class AdvancedSQL2B implements MenuEntry {
 					// if we found the actor already
 					if (newActor.equals(actorTo)) {
 						path.put(actorTo, value);
-						actorRS.close();
+						queue.clear();
 						found = true;
-						break bfs;
-
 					} else {
 
 						// add it to the queue and add a tupel to the path
@@ -164,16 +162,16 @@ public class AdvancedSQL2B implements MenuEntry {
 		DBConnector con = DBConnector.getInstance();
 
 		// prepare Statements
-		getAllConectedActorStmt = con.connection
-				.prepareStatement("SELECT actor, gender FROM Starring WHERE movie in "
-						+ "( SELECT movie FROM Starring WHERE actor = ? AND gender = ? ORDER BY movie)"
-						+ "AND NOT (actor = ? AND gender = ?) ORDER BY actor;");
+		if(getAllConnectedActorStmt == null) {
+			getAllConnectedActorStmt = con.connection
+					.prepareStatement("SELECT actor, gender FROM Starring WHERE movie in "
+							+ "( SELECT movie FROM Starring WHERE actor = ? AND gender = ?)"
+							+ " ORDER BY actor;");
+		}
 
-		getAllConectedActorStmt.setString(1, value.name);
-		getAllConectedActorStmt.setString(2, value.gender);
-		getAllConectedActorStmt.setString(3, value.name);
-		getAllConectedActorStmt.setString(4, value.gender);
+		getAllConnectedActorStmt.setString(1, value.name);
+		getAllConnectedActorStmt.setString(2, value.gender);
 
-		return getAllConectedActorStmt.executeQuery();
+		return getAllConnectedActorStmt.executeQuery();
 	}
 }

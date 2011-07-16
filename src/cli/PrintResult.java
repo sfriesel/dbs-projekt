@@ -46,7 +46,7 @@ public class PrintResult {
 		this.rows.add(row);
 	}
 
-	private int getHeadLenght() {
+	private int getHeadLength() {
 		int result = 0;
 		for (int i = 0; i < head.length; i++) {
 			result += head[i].toCharArray().length + numSpaces + 3;
@@ -55,9 +55,9 @@ public class PrintResult {
 	}
 
 	private void printLine() {
-		for (int i = 0; i < getHeadLenght(); i++)
+		for (int i = 0; i < getHeadLength(); i++)
 			System.out.print("-");
-		System.out.print("\r");
+		System.out.print("\n");
 	}
 
 	public void print() {
@@ -72,7 +72,7 @@ public class PrintResult {
 			format = format.concat("%" + (head[i].length() + numSpaces)
 					+ "s  |");
 		}
-		format = format.concat("\r");
+		format = format.concat("\n");
 
 		System.out.printf(format, (Object[]) head);
 
