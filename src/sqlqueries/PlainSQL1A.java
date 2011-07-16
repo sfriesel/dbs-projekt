@@ -15,7 +15,7 @@ public class PlainSQL1A implements MenuEntry {
 	}
 
 	@Override
-	public String getDiscription() {
+	public String getDescription() {
 		return "Wieviele Kunden haben sich für welches Preismodell entschieden?";
 	}
 

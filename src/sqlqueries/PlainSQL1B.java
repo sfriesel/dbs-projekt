@@ -11,7 +11,7 @@ public class PlainSQL1B implements MenuEntry {
 	}
 
 	@Override
-	public String getDiscription() {
+	public String getDescription() {
 		// TODO Auto-generated method stub
 		return null;
 	}

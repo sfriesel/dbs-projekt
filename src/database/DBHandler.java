@@ -18,7 +18,7 @@ public class DBHandler implements MenuEntry {
 	}
 
 	@Override
-	public String getDiscription() {
+	public String getDescription() {
 		return "Die Datenbank wird komplett neu gemacht.";
 	}
 

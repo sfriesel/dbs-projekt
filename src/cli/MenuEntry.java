@@ -4,7 +4,7 @@ public interface MenuEntry {
 
 	public String getName();
 
-	public String getDiscription();
+	public String getDescription();
 
 	public void execute() throws Exception;
 }

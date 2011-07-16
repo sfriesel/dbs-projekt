@@ -8,7 +8,7 @@ public class ExitEntry implements MenuEntry {
 	}
 
 	@Override
-	public String getDiscription() {
+	public String getDescription() {
 		return "Beendet das Consolen-Programm.";
 	}
 
