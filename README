@@ -1,0 +1,19 @@
+Kompilieren
+=======================================
+$ ant compile
+
+Ausführen
+=======================================
+$ ant run
+
+Der classpath muss in build.xml geändert werden, wenn jdbc nicht in
+/usr/share/java/ installiert ist. Außerdem müssen die Verbindungsparameter
+für die Datenbank in build.xml angepasst werden. Die Reihenfolge ist:
+Datenbankname, Benutzer, Passwort und optional Adresse und Port. Beim ersten
+Start muss zuerst "Einlesen der DB" ausgewählt werden, was ca. 10 min
+dauert.
+
+Info
+=======================================
+Alle weiteren Informationen zu den Designentscheidungen befinden sich in der
+gleichnamigen Datei.
