@@ -44,6 +44,7 @@ public class Main {
 		menu.add(new PlainSQL1D());
 		menu.add(new AdvancedSQL2A());
 		menu.add(new AdvancedSQL2B());
+		menu.add(new AccountingPerYearCustomer());
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int input = -1;
