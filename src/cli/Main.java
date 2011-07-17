@@ -4,8 +4,8 @@ import database.DBConnector;
 
 public class Main {
 
-	public static void main(String[] args) {
-		
+	public static void main(String[] args) throws Exception {
+
 		// Configure DB connection
 		if (args.length < 3) {
 			System.err
@@ -18,12 +18,7 @@ public class Main {
 			DBConnector.configure(null, null, args[0], args[1], args[2]);
 		}
 
-		MainMenu me = new MainMenu();
-		
-		try {
-			me.execute();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		new MainMenu().execute();
+
 	}
 }

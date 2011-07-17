@@ -2,26 +2,22 @@ Dokumentation der Designentscheidungen
 
 Filme der Jahre 2010 und 2011
 -----------------------------
-Da es so viele Filme in der DB gibt, haben wir uns der einfachhalthalber dazu entschieden den Filmtitel zu überprüfen, ob
-2010 oder 2011 vorkommt. Daduch wird das parsen erleichtert und es dauert auch nicht mehr ganz so lange. Am wichtigsten war
-uns eine einigermaßen konsistente Datenbasis zu haben. Dadurch kann man schon mal eine Menge Filme schnell rauswerfen, die man 
-eh nicht benötigt.
+Da es so viele Filme in der DB gibt, haben wir uns der Einfachheit halber entschieden zu überprüfen, ob im Filmtitel 2010 oder 2011 vorkommt. Daduch wird das Parsen erleichtert und beschleunigt. Am wichtigsten war uns, eine einigermaßen konsistente Datenbasis zu haben. Dadurch kann man schon mal eine Menge Filme schnell rauswerfen, die ohnehin nicht benötigt werden.
 
 Primary Keys
 ------------
-Wir haben uns dazu entschieden möglichst nur natürliche Primary Keys zu benutzen. Auch wenn es vielleicht wenig Sinn macht den
-Filmtitel ständig herumzutragen. Obwohl sich vielleicht Postgres selbst um die Optimierung kümmert. Customer sind
-die einzigsten mit ID.
+Wir haben uns dazu entschieden, sofern möglich, natürliche Primärschlüssel zu benutzen. Dadurch ist die Dateninegrität gewahrt, allerdings verbraucht der Filmtitel als Fremdschlüssel sehr viel Platz. Customer besitzen jedoch eine ID, weil sich der Primärschlüssel sonst aus sehr vielen Feldern zusammensetzen würde.
 
 Parsen
 ------
-Alle kaputten Zeilen werden weggeworfen. Gleichnamige Actors, Actresses sind auch die gleichen, auch wenn sie in der
-Datei an verschiedenen Stellen auftauchen. Das selbe passiert bei den Directors.
+Alle Dateien werden von einem AbstractParser in einzelne Tokens zerlegt, die dann von spezialisierten Parsern in INSERT Statements umgewandelt werden.
+Alle Zeilen, die nicht korrekt geparst werden können, werden verworfen. Gleichnamige Personen (Schauspieler, Regisseure) werden nur einmal importiert, auch wenn sie mehrmals in den Listen auftauchen.
 
 DB und Cache
 ------------
-Wir benutzen Batch-Exectution um effizient Daten in die DB einzufügen. Um die Konsistenz der Daten zu garantieren und
-die Geschwindgkeit zu erhöhen benutzen wir einen Cache für alle möglichen Daten (Movie, Actor, Dierector, usw.).
+Wir benutzen PreparedStatements mit Batch-Execution, um effizient Daten in die DB einzufügen. Um die Konsistenz der Daten zu garantieren und die Geschwindgkeit zu erhöhen benutzen wir einen Cache für die meisten Daten (Movie, Actor, Director, usw.).
+
+Der Zugriff auf die Datenbank erfolgt über ein java.sql.Connection-Singleton, das anfangs einmalig mit den Verbindungsdaten konfiguriert werden muss.
 
 Preismodelle
 ------------

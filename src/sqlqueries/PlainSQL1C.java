@@ -1,12 +1,9 @@
 package sqlqueries;
 
 import java.sql.*;
-
 import cli.PrintResult;
-
 import cli.MenuEntryInterface;
-import database.*;;
-
+import database.*;
 public class PlainSQL1C implements MenuEntryInterface {
 
 	@Override
@@ -35,5 +32,4 @@ public class PlainSQL1C implements MenuEntryInterface {
 		pr.setDescription("Monate mit den meisten Oscar-nominierten Veröffentlichungen:");
 		pr.print();
 	}
-
 }

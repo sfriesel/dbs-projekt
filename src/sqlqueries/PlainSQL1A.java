@@ -19,6 +19,7 @@ public class PlainSQL1A implements MenuEntryInterface {
 		return "Wieviele Kunden haben sich für welches Preismodell entschieden?";
 	}
 
+	@Override
 	public void execute() throws SQLException {
 		DBConnector con = DBConnector.getInstance();
 		

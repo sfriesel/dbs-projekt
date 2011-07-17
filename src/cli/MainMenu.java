@@ -1,8 +1,6 @@
 package cli;
 
 import database.*;
-import sqlqueries.*;
-
 import java.io.*;
 import java.util.ArrayList;
 
@@ -21,7 +19,6 @@ public class MainMenu implements MenuEntryInterface {
 	}
 
 	public MainMenu() {
-
 		// set up menueEntries
 		menu = new ArrayList<MenuEntryInterface>();
 		menu.add(new DBHandler());

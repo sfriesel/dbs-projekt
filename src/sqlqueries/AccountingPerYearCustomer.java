@@ -12,7 +12,7 @@ public class AccountingPerYearCustomer implements MenuEntryInterface {
 
 	@Override
 	public String getName() {
-		return "Rechnung pro Jahr pro Kunde.";
+		return "Rechnung pro Kalenderjahr und Kunde";
 	}
 
 	@Override
