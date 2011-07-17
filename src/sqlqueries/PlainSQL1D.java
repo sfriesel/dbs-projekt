@@ -16,7 +16,7 @@ public class PlainSQL1D implements MenuEntry {
 	}
 
 	@Override
-	public String getDiscription() {
+	public String getDescription() {
 		return "Ermitteln Sie eine Rangliste aller Kunden, sortiert nach dem Anteil der geliehenen "
 				+ "Filme, die (auch) außerhalb der USA gedreht wurde.";
 	}

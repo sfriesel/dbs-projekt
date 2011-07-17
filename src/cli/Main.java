@@ -39,6 +39,8 @@ public class Main {
 		menu.add(new ExitEntry());
 		menu.add(new DBHandler());
 		menu.add(new PlainSQL1A());
+		menu.add(new PlainSQL1B());
+		menu.add(new PlainSQL1C());
 		menu.add(new PlainSQL1D());
 		menu.add(new AdvancedSQL2A());
 		menu.add(new AdvancedSQL2B());

@@ -1,6 +1,11 @@
 package sqlqueries;
 
+import java.sql.*;
+
+import cli.PrintResult;
+
 import cli.MenuEntry;
+import database.*;;
 
 public class PlainSQL1C implements MenuEntry {
 
@@ -17,8 +22,18 @@ public class PlainSQL1C implements MenuEntry {
 
 	@Override
 	public void execute() throws Exception {
-		// TODO Auto-generated method stub
-
+		DBConnector con = DBConnector.getInstance();
+		
+		Statement stmt = con.connection.createStatement();
+		ResultSet rs = stmt.executeQuery(
+			  "SELECT EXTRACT(MONTH FROM Release), COUNT(*) "
+			+ "FROM Nomination n JOIN Movie m ON n.title = m.title "
+			+ "GROUP BY EXTRACT(MONTH FROM Release) "
+			+ "ORDER BY COUNT(*) DESC");
+		PrintResult pr = new PrintResult(rs);
+		pr.setHead("Monat", "Nominierungen");
+		pr.setDescription("Monate mit den meisten Oscar-nominierten Veröffentlichungen:");
+		pr.print();
 	}
 
 }

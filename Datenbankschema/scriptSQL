@@ -101,7 +101,7 @@ CREATE TABLE Nomination (
 	year integer
 );
 
-EXPLAIN INSERT INTO Nomination (title, category, year) VALUES
+INSERT INTO Nomination (title, category, year) VALUES
 ('Avatar (2009)'                , 'picture' , 2010),
 ('The Blind Side (2009)'        , 'picture' , 2010),
 ('District 9 (2009)'            , 'picture' , 2010),
