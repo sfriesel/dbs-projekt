@@ -4,8 +4,6 @@ import java.sql.*;
 
 import cli.MenuEntryInterface;
 import cli.PrintResult;
-
-import cli.MenuEntryInterface;
 import database.*;
 
 public class AccountingPerYearCustomer implements MenuEntryInterface {
