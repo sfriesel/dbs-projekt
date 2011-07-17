@@ -1,6 +1,6 @@
 package database;
 
-import cli.MenuEntry;
+import cli.MenuEntryInterface;
 import datahandling.AbstractDataHandler;
 import datahandling.ActorsActressDataHandler;
 import datahandling.CustomerDataHandler;
@@ -10,7 +10,7 @@ import datahandling.MovieDataHandler;
 import datahandling.ReleaseDataHandler;
 import datahandling.RentalsDataHandler;
 
-public class DBHandler implements MenuEntry {
+public class DBHandler implements MenuEntryInterface {
 
 	@Override
 	public String getName() {
