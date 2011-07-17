@@ -31,12 +31,21 @@ public class InsertCustomer implements MenuEntryInterface {
 		DBConnector con = DBConnector.getInstance();
 		PreparedStatement insertStmt = con.connection
 				.prepareStatement("INSERT INTO Customer (surname, forename, "
-						+ "street, streetnnumber, zip, city, telefone) VALUES (?,?,?,?,?,?,?)");
+						+ "street, streetnumber, zip, city, telephone) VALUES (?,?,?,?,?,?,?,?)");
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String input = br.readLine();
 
+		while (input.split(", ").length != 7) {
+
+			System.out
+					.println("Folgendes Format beachten: "
+							+ "<Nachname, Vorame, Straße, Hausnummer, PLZ, Stadt, Telefonnummer>");
+			input = br.readLine();
+		}
+
 		String[] data = input.split(", ");
+
 		insertStmt.setString(1, data[0]);
 		insertStmt.setString(2, data[1]);
 		insertStmt.setString(3, data[2]);
@@ -46,7 +55,7 @@ public class InsertCustomer implements MenuEntryInterface {
 		insertStmt.setString(7, data[6]);
 
 		PreparedStatement selectStmt = con.connection
-				.prepareStatement("SELECT FROM Customer "
+				.prepareStatement("SELECT * FROM Customer "
 						+ "WHERE surname = ? AND forename = ?;");
 
 		selectStmt.setString(1, data[0]);
@@ -62,8 +71,6 @@ public class InsertCustomer implements MenuEntryInterface {
 			System.out
 					.println("Neuer Kunde konnte nicht hinzugefügt werden, Kunde mit gleichem Namen "
 							+ "existiert bereits.");
-
 		}
-
 	}
 }
