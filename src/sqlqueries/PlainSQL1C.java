@@ -4,10 +4,10 @@ import java.sql.*;
 
 import cli.PrintResult;
 
-import cli.MenuEntry;
-import database.*;;
+import cli.MenuEntryInterface;
+import database.*;
 
-public class PlainSQL1C implements MenuEntry {
+public class PlainSQL1C implements MenuEntryInterface {
 
 	@Override
 	public String getName() {

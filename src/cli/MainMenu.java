@@ -21,12 +21,12 @@ public class MainMenu implements MenuEntryInterface {
 	}
 
 	public MainMenu() {
-
 		// set up menueEntries
 		menu = new ArrayList<MenuEntryInterface>();
 		menu.add(new DBHandler());
 		menu.add(new SimpleSQLEntry());
 		menu.add(new AdvancedSQLEntry());
+		menu.add(new AccountingPerYearCustomer());
 		menu.add(new ExitEntry());
 	}
 

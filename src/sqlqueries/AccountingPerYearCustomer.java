@@ -4,19 +4,19 @@ import java.sql.*;
 
 import cli.PrintResult;
 
-import cli.MenuEntry;
+import cli.MenuEntryInterface;
 import database.*;
 
-public class AccountingPerYearCustomer implements MenuEntry {
+public class AccountingPerYearCustomer implements MenuEntryInterface {
 
 	@Override
 	public String getName() {
-		return "1B-Rechnungssummen";
+		return "Rechnung pro Kalenderjahr und Kunde";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Die Rechnungssummen für alle Kunden für den Monat Januar.";
+		return "Die Rechnungssummen für alle Kunden.";
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
-import cli.MenuEntry;
+import cli.MenuEntryInterface;
 import cli.PrintResult;
 import database.DBConnector;
 
@@ -16,7 +16,7 @@ import database.DBConnector;
  * @author alexa
  * 
  */
-public class AdvancedSQL2A implements MenuEntry {
+public class AdvancedSQL2A implements MenuEntryInterface {
 
 	PreparedStatement getCustomerWithFlatStmt;
 	PreparedStatement getRentalWithIDStmt;

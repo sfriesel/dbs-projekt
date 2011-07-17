@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class Main {
 
-	private static ArrayList<MenuEntry> menu;
+	private static ArrayList<MenuEntryInterface> menu;
 
 	private static void printMenu() {
 		System.out.println("DVD-Verleih-Menü:");
@@ -35,7 +35,7 @@ public class Main {
 		}
 
 		// set up menueEntries
-		menu = new ArrayList<MenuEntry>();
+		menu = new ArrayList<MenuEntryInterface>();
 		menu.add(new ExitEntry());
 		menu.add(new DBHandler());
 		menu.add(new PlainSQL1A());
