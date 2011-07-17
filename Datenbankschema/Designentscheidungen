@@ -21,4 +21,4 @@ Der Zugriff auf die Datenbank erfolgt über ein java.sql.Connection-Singleton, d
 
 Preismodelle
 ------------
-Grundgebühr pro Monat bedeutet bei uns pro Kalendermonat.
+Grundgebühr pro Monat bedeutet bei uns pro Kalendermonat. Im Tarifmodell Flat haben wir den Zusatz, dass an jedem Tag der erste B-Movie kostenlos ist, ausgelassen. Zur Berechnung des Rabatts wäre es nötig, für jeden Kunden jeweils eine Liste der Tage des betreffenden Zeitraums mitzuführen, an denen der Rabatt bereits wahrgenommen wurde.
