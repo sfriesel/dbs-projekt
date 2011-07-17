@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS Nomination CASCADE;
 DROP TABLE IF EXISTS Pricing CASCADE;
 
 CREATE TABLE Customer (
-	id integer PRIMARY KEY,
+	id serial PRIMARY KEY,
 	surname varchar(20),
 	forename varchar(15),
 	street varchar(50),
