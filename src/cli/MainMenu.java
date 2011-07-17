@@ -27,6 +27,7 @@ public class MainMenu implements MenuEntryInterface {
 		menu.add(new DBHandler());
 		menu.add(new SimpleSQLEntry());
 		menu.add(new AdvancedSQLEntry());
+		menu.add(new InsertInvoiceEntry());
 		menu.add(new ExitEntry());
 	}
 
