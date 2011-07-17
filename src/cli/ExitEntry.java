@@ -1,6 +1,6 @@
 package cli;
 
-public class ExitEntry implements MenuEntry {
+public class ExitEntry implements MenuEntryInterface {
 
 	@Override
 	public String getName() {
