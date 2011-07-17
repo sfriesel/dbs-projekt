@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import cli.MenuEntryInterface;
@@ -26,7 +27,7 @@ public class InsertMovie implements MenuEntryInterface {
 
 		System.out.println("Geben Sie einen neuen Movie ein:");
 		System.out
-				.println("<Titel, [Beschreibung], Kategorie(A,B), [ReleaseDatum dd:mm:yyyy], [ReleasLand]>");
+				.println("<Titel, [Beschreibung], Kategorie(A,B), [ReleaseDatum dd:mm:yyyy], ReleasLand>");
 
 		DBConnector con = DBConnector.getInstance();
 		PreparedStatement insertStmt = con.connection
@@ -40,7 +41,7 @@ public class InsertMovie implements MenuEntryInterface {
 
 			System.out
 					.println("Folgendes Format beachten: "
-							+ "<Titel, [Beschreibung], Kategorie(A,B), [ReleaseDatum dd:mm:yyyy], [ReleasLand]>");
+							+ "<Titel, [Beschreibung], Kategorie(A,B), [ReleaseDatum dd:mm:yyyy], ReleasLand>");
 			input = br.readLine();
 		}
 
@@ -51,7 +52,15 @@ public class InsertMovie implements MenuEntryInterface {
 		insertStmt.setString(3, data[2]);
 
 		SimpleDateFormat format = new SimpleDateFormat("d:MM:yyyy");
-		java.util.Date date = format.parse(data[3]);
+		java.util.Date date = null;
+		
+		try {
+			date = format.parse(data[3]);
+		} catch (ParseException e) {
+			System.out.println("Falsched Datumsformat.");
+			return;
+		}
+		
 		java.sql.Date sqlD = new java.sql.Date(date.getTime());
 
 		insertStmt.setDate(4, sqlD);
