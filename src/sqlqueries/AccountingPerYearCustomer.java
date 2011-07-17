@@ -7,7 +7,7 @@ import cli.PrintResult;
 import cli.MenuEntry;
 import database.*;
 
-public class PlainSQL1B implements MenuEntry {
+public class AccountingPerYearCustomer implements MenuEntry {
 
 	@Override
 	public String getName() {
@@ -45,5 +45,4 @@ public class PlainSQL1B implements MenuEntry {
 		pr.setDescription("Rechnungssummen für alle Kunden für den Monat Januar:");
 		pr.print();
 	}
-
 }
