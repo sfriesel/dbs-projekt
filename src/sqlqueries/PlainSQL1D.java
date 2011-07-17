@@ -2,11 +2,11 @@ package sqlqueries;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
-import cli.MenuEntry;
+import cli.MenuEntryInterface;
 import cli.PrintResult;
 import database.DBConnector;
 
-public class PlainSQL1D implements MenuEntry {
+public class PlainSQL1D implements MenuEntryInterface {
 
 	Statement customerStmt;
 

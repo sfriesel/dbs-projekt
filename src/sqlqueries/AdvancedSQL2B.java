@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import cli.MenuEntry;
+import cli.MenuEntryInterface;
 
 import database.DBConnector;
 
@@ -26,7 +26,7 @@ import database.DBConnector;
  * @author alexa
  * 
  */
-public class AdvancedSQL2B implements MenuEntry {
+public class AdvancedSQL2B implements MenuEntryInterface {
 
 	PreparedStatement getAllConnectedActorStmt;
 

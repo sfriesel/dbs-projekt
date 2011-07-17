@@ -4,10 +4,10 @@ import java.sql.*;
 
 import cli.PrintResult;
 
-import cli.MenuEntry;
+import cli.MenuEntryInterface;
 import database.*;
 
-public class PlainSQL1B implements MenuEntry {
+public class PlainSQL1B implements MenuEntryInterface {
 
 	@Override
 	public String getName() {
@@ -45,5 +45,4 @@ public class PlainSQL1B implements MenuEntry {
 		pr.setDescription("Rechnungssummen für alle Kunden für den Monat Januar:");
 		pr.print();
 	}
-
 }
