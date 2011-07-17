@@ -23,9 +23,8 @@ public class CustomerDataHandler extends AbstractDataHandler {
 	@Override
 	protected void insertDB(String[] arrayLine) throws SQLException {
 
-		insertStmt.setInt(1, Integer.parseInt(arrayLine[0]));
-		insertStmt.setString(2, arrayLine[1]);
-		insertStmt.setString(3, arrayLine[2]);
+		insertStmt.setString(1, arrayLine[1]);
+		insertStmt.setString(2, arrayLine[2]);
 
 		// split the street and the number
 		int number = Integer.parseInt(arrayLine[3].substring(
@@ -33,11 +32,11 @@ public class CustomerDataHandler extends AbstractDataHandler {
 		String street = arrayLine[3]
 				.substring(0, arrayLine[3].lastIndexOf(" "));
 
-		insertStmt.setString(4, street);
-		insertStmt.setInt(5, number);
-		insertStmt.setInt(6, Integer.parseInt(arrayLine[4]));
-		insertStmt.setString(7, arrayLine[5]);
-		insertStmt.setString(8, arrayLine[6]);
+		insertStmt.setString(3, street);
+		insertStmt.setInt(4, number);
+		insertStmt.setInt(5, Integer.parseInt(arrayLine[4]));
+		insertStmt.setString(6, arrayLine[5]);
+		insertStmt.setString(7, arrayLine[6]);
 		insertStmt.addBatch();
 		cache.customer.add(Integer.parseInt(arrayLine[0]));
 	}
@@ -52,8 +51,8 @@ public class CustomerDataHandler extends AbstractDataHandler {
 
 		insertStmt = con.connection
 				.prepareStatement("insert into customer"
-						+ "(id, surname, forename, street, streetnumber, zip, city, telephone)"
-						+ "VALUES (?,?,?,?,?,?,?,?);");
+						+ "(surname, forename, street, streetnumber, zip, city, telephone)"
+						+ "VALUES (?,?,?,?,?,?,?);");
 	}
 
 	@Override
