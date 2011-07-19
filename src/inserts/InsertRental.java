@@ -57,9 +57,9 @@ public class InsertRental implements MenuEntryInterface {
 					.println("<KundenID, Preismodell (starter, flat, speedy), Movie(Zahl)>");
 
 			String input = br.readLine();
-			
 
-			while (input.split(", ").length != 3
+			String[] data = input.split(", ");
+			while (data.length != 3
 					|| !(data[1].equals("starter") || data[1].equals("flat") || data[1]
 							.equals("speedy"))) {
 
@@ -67,9 +67,8 @@ public class InsertRental implements MenuEntryInterface {
 						.println("Folgendes Format beachten: "
 								+ "<KundenID, Preismodell (starter, flat, speedy), Movie(Zahl)>");
 				input = br.readLine();
+				data = input.split(", ");
 			}
-			
-			String[] data = input.split(", ");
 
 			PreparedStatement insertStmt = con.connection
 					.prepareStatement("INSERT INTO Rental (customer, pricemodel, "
@@ -90,7 +89,7 @@ public class InsertRental implements MenuEntryInterface {
 			
 		} else {
 			System.out
-					.println("Eskonnten keine Filme mit diesem Suchwort gefunden werden.");
+					.println("Es konnten keine Filme mit diesem Suchwort gefunden werden.");
 		}
 	}
 }
