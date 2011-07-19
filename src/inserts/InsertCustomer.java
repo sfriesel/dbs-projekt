@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import cli.MenuEntryInterface;
 import database.DBConnector;
@@ -25,15 +24,14 @@ public class InsertCustomer implements MenuEntryInterface {
 	public void execute() throws Exception {
 
 		DBConnector con = DBConnector.getInstance();
-		
+
 		PreparedStatement insertStmt = con.connection
 				.prepareStatement("INSERT INTO Customer (surname, forename, "
 						+ "street, streetnumber, zip, city, telephone) VALUES (?,?,?,?,?,?,?)");
-		
+
 		PreparedStatement selectStmt = con.connection
 				.prepareStatement("SELECT * FROM Customer "
 						+ "WHERE surname = ? AND forename = ?;");
-		
 
 		System.out.println("Geben Sie einen neuen Kunden ein:");
 		System.out
@@ -49,7 +47,7 @@ public class InsertCustomer implements MenuEntryInterface {
 							+ "<Nachname, Vorame, Straße, Hausnummer, PLZ, Stadt, Telefonnummer>");
 			input = br.readLine();
 		}
-		
+
 		String[] data = input.split(", ");
 
 		selectStmt.setString(1, data[0]);
@@ -66,21 +64,16 @@ public class InsertCustomer implements MenuEntryInterface {
 			insertStmt.setString(5, data[4]);
 			insertStmt.setString(6, data[5]);
 			insertStmt.setString(7, data[6]);
-			
-			try {
-				insertStmt.execute();
-				con.connection.commit();
-			} catch (SQLException e) {
-				e.printStackTrace();
-				e.getNextException().printStackTrace();
-			}
+
+			con.connection.commit();
+
 			System.out.println("Kunde [" + data[0] + ", " + data[1]
 					+ "] wurde hinzugefügt.");
 		} else {
 			System.out
 					.println("Neuer Kunde konnte nicht hinzugefügt werden, Kunde mit gleichem Namen "
 							+ "existiert bereits.");
-			System.out.println();
+			System.out.println("\n");
 		}
 	}
 }
